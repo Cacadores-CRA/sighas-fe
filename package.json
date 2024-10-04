@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext ts,tsx --max-warnings 10",
+    "lint-fix": "eslint src --ext ts,tsx --max-warnings 10 --fix"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",
