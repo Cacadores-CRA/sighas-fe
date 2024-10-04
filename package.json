@@ -12,6 +12,7 @@
     "lint-fix": "eslint src --ext ts,tsx --max-warnings 10 --fix"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.59.0",
     "@tanstack/react-router": "^1.58.18",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
