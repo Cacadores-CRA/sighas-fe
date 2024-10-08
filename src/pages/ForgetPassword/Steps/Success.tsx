@@ -1,15 +1,8 @@
-import { useMemo, useState } from 'react';
-
 import { Button } from '@/components/ui/button';
-
 import { CircleCheckBig } from 'lucide-react';
-
-import { StepUserSearch } from './Steps/UserSearch';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { StepCodeVerification } from './Steps/CodeVerification';
-import { StepNewPassword } from './Steps/NewPassword';
 
-const StepSuccess = () => {
+export const StepSuccess = () => {
   const navigate = useNavigate();
   return (
     <div className='flex w-full flex-col gap-4'>
@@ -33,29 +26,6 @@ const StepSuccess = () => {
       >
         Certo
       </Button>
-    </div>
-  );
-};
-
-const Steps = {
-  1: StepUserSearch,
-  2: StepCodeVerification,
-  3: StepNewPassword,
-  4: StepSuccess,
-};
-
-export const ForgetPasswordPage = () => {
-  const [step, setStep] = useState<number>(1);
-
-  const CurrentStep = useMemo(() => Steps[step as keyof typeof Steps], [step]);
-
-  const handleNextStep = () => {
-    setStep((prev) => prev + 1);
-  };
-
-  return (
-    <div className='flex w-full flex-col gap-4'>
-      <CurrentStep onNextStep={handleNextStep} />
     </div>
   );
 };
