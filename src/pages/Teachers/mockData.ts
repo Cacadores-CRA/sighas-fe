@@ -1,39 +1,51 @@
-export type Payment = {
-  id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
+export type UserData = {
+  name: string;
   email: string;
+  siape: string;
+  education_level: string;
+  perfil: string;
+  status: string;
 };
 
-export const data: Payment[] = [
+export const data: UserData[] = [
   {
-    id: 'm5gr84i9',
-    amount: 316,
-    status: 'success',
-    email: 'ken99@yahoo.com',
+    name: 'Ana Maria',
+    email: 'ana.maria@ifal.edu.br',
+    siape: '123456',
+    education_level: 'Mestrado',
+    perfil: 'Usuário',
+    status: 'Ativo',
   },
   {
-    id: '3u1reuv4',
-    amount: 242,
-    status: 'success',
-    email: 'Abe45@gmail.com',
+    name: 'Carlos Souza',
+    email: 'carlos.souza@ifal.edu.br',
+    siape: '654321',
+    education_level: 'Doutorado',
+    perfil: 'Usuário',
+    status: 'Ativo',
   },
   {
-    id: 'derv1ws0',
-    amount: 837,
-    status: 'processing',
-    email: 'Monserrat44@gmail.com',
+    name: 'Bianca Oliveira',
+    email: 'bianca.oliveira@ifal.edu.br',
+    siape: '789123',
+    education_level: 'Especialização',
+    perfil: 'Usuário',
+    status: 'Inativo',
   },
   {
-    id: '5kma53ae',
-    amount: 874,
-    status: 'success',
-    email: 'Silas22@gmail.com',
+    name: 'Fernando Lima',
+    email: 'fernando.lima@ifal.edu.br',
+    siape: '321987',
+    education_level: 'Graduação',
+    perfil: 'Usuário',
+    status: 'Ativo',
   },
   {
-    id: 'bhqecj4p',
-    amount: 721,
-    status: 'failed',
-    email: 'carmella@hotmail.com',
+    name: 'Julia Santos',
+    email: 'julia.santos@ifal.edu.br',
+    siape: '456789',
+    education_level: 'Pós-doutorado',
+    perfil: 'Usuário',
+    status: 'Ativo',
   },
 ];

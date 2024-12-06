@@ -9,10 +9,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
-import { Payment } from './mockData';
+import { ChevronsUpDown, MoreHorizontal } from 'lucide-react';
+import { UserData } from './mockData';
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<UserData>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -36,11 +36,9 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('status')}</div>
-    ),
+    accessorKey: 'name',
+    header: 'Nome',
+    cell: ({ row }) => <div className='capitalize'>{row.getValue('name')}</div>,
   },
   {
     accessorKey: 'email',
@@ -50,46 +48,59 @@ export const columns: ColumnDef<Payment>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Email
-          <ArrowUpDown />
+          Email Institucional
+          <ChevronsUpDown size='16' />
         </Button>
       );
     },
     cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
   },
   {
-    accessorKey: 'amount',
-    header: () => <div className='text-right'>Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount);
-
-      return <div className='text-right font-medium'>{formatted}</div>;
-    },
+    accessorKey: 'siape',
+    header: 'SIAPE',
+    cell: ({ row }) => (
+      <div className='capitalize'>{row.getValue('siape')}</div>
+    ),
+  },
+  {
+    accessorKey: 'education_level',
+    header: 'Gradu de Educação',
+    cell: ({ row }) => (
+      <div className='capitalize'>{row.getValue('education_level')}</div>
+    ),
+  },
+  {
+    accessorKey: 'perfil',
+    header: 'Perfil',
+    cell: ({ row }) => (
+      <div className='capitalize'>{row.getValue('perfil')}</div>
+    ),
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => (
+      <div className='capitalize'>{row.getValue('status')}</div>
+    ),
   },
   {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const user = row.original;
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' className='h-8 w-8 p-0'>
               <span className='sr-only'>Open menu</span>
-              <MoreHorizontal />
+              <MoreHorizontal size='16' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(user.email)}
             >
               Copy payment ID
             </DropdownMenuItem>
