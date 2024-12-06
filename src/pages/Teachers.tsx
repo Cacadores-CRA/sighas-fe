@@ -15,7 +15,7 @@ import { Link } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export const DashboardPage = () => {
+export const TeachersPage = () => {
   const form = useForm<z.infer<typeof formLoginSchema>>({
     resolver: zodResolver(formLoginSchema),
     defaultValues: {
