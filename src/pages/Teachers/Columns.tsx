@@ -78,10 +78,18 @@ export const columns: ColumnDef<UserData>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('status')}</div>
-    ),
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Status
+          <ChevronsUpDown size='16' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
   },
   {
     id: 'actions',
