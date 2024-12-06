@@ -1,2 +1,12 @@
 node_modules
 dist
+build
+coverage
+.next
+.vercel
+.turbo
+.cache
+public
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
