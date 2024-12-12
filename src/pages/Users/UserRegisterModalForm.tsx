@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { UserFormData, userSchema } from '@/schema/UserSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { format } from 'date-fns';
 import { CalendarIcon, PlusCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
+import { AxiosErrorData } from '@/types/ErrorTypes';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -32,9 +36,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { SubmitButton } from '@/components/SubmitButton';
+
+import { customInstance } from '../../../axiosInstance';
 
 export function UserRegisterModalForm() {
+  const queryClient = useQueryClient();
+
   const [isOpen, setIsOpen] = useState(false);
+
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
@@ -49,8 +59,34 @@ export function UserRegisterModalForm() {
     },
   });
 
+  const addUser = useMutation({
+    mutationFn: (newUser: UserFormData) => {
+      return customInstance({
+        url: `/v1/users`,
+        method: 'POST',
+        // params,
+        data: newUser,
+      });
+    },
+    onSuccess: () => {
+      // ✅ refetch the users list
+      toast.success('Usuário registrado com sucesso!.');
+      queryClient.invalidateQueries({
+        queryKey: ['users'],
+      });
+    },
+    onError: (error: AxiosError<AxiosErrorData>) => {
+      console.log('error:');
+      console.log(error);
+
+      error.response?.data.errors?.map((error) => {
+        toast.error(error.defaultMessage);
+      });
+    },
+  });
+
   const onSubmit = (data: UserFormData) => {
-    console.log(data);
+    addUser.mutate(data);
     setIsOpen(false);
   };
 
@@ -247,12 +283,14 @@ export function UserRegisterModalForm() {
                 <Button
                   type='button'
                   variant='outline'
-                  onClick={() => form.reset()}
+                  onClick={() => {
+                    form.reset();
+                  }}
                 >
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type='submit'>Register</Button>
+              <SubmitButton disableIfInvalid>Register</SubmitButton>
             </div>
           </form>
         </Form>

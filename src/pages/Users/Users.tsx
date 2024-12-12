@@ -12,6 +12,12 @@ import { UserRegisterModalForm } from './UserRegisterModalForm';
 export const UsersPage = () => {
   const { data: usersData } = useUsersList([]);
 
+  // const sortedUsersData = usersData?.sort((a, b) => {
+  //   if (a.id < b.id) return -1;
+  //   if (a.id > b.id) return 1;
+  //   return 0;
+  // });
+
   return (
     <div className='w-full'>
       <div className='flex flex-col gap-16 h-full'>
@@ -42,7 +48,7 @@ export const UsersPage = () => {
             </div>
           </CardContent>
         </Card>
-        <Card className='w-full rounded-[40px] px-9 py-7'>
+        <Card className='w-full min-h-[700px] rounded-[40px] px-9 py-7'>
           <CardHeader className='flex flex-row items-center justify-between'>
             <CardTitle className='text-2xl leading-3 font-semibold'>
               Todos os Usuários
