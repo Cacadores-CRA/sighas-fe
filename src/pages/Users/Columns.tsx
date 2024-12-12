@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronsUpDown, MoreHorizontal } from 'lucide-react';
 
+import { UserDataType } from '@/types/Users/UserData';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -12,9 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { TeacherData } from './mockData';
-
-export const columns: ColumnDef<TeacherData>[] = [
+export const columns: ColumnDef<UserDataType>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -43,6 +42,11 @@ export const columns: ColumnDef<TeacherData>[] = [
     cell: ({ row }) => <div className='capitalize'>{row.getValue('name')}</div>,
   },
   {
+    accessorKey: 'cpf',
+    header: 'CPF',
+    cell: ({ row }) => <div className='capitalize'>{row.getValue('cpf')}</div>,
+  },
+  {
     accessorKey: 'email',
     header: ({ column }) => {
       return (
@@ -58,13 +62,6 @@ export const columns: ColumnDef<TeacherData>[] = [
     cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
   },
   {
-    accessorKey: 'siape',
-    header: 'SIAPE',
-    cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('siape')}</div>
-    ),
-  },
-  {
     accessorKey: 'education_level',
     header: 'Grau de Educação',
     cell: ({ row }) => (
@@ -72,26 +69,18 @@ export const columns: ColumnDef<TeacherData>[] = [
     ),
   },
   {
-    accessorKey: 'perfil',
-    header: 'Perfil',
+    accessorKey: 'birthdate',
+    header: 'Data de Nascimento',
     cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('perfil')}</div>
+      <div className='capitalize'>{row.getValue('birthdate')}</div>
     ),
   },
   {
-    accessorKey: 'status',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Status
-          <ChevronsUpDown size='16' />
-        </Button>
-      );
+    accessorKey: 'afilliations',
+    header: 'Afiliações',
+    cell: ({ row }) => {
+      return <Button onClick={() => console.log(row)}>Afiliações</Button>;
     },
-    cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
   },
   {
     id: 'actions',

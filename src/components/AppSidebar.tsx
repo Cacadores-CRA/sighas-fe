@@ -1,12 +1,13 @@
 import {
   BookOpen,
+  GraduationCap,
   Home,
   LayoutDashboard,
-  Presentation,
-  GraduationCap,
   Library,
+  Presentation,
 } from 'lucide-react';
 
+import { cn } from '@/lib/utils';
 import {
   Sidebar,
   SidebarContent,
@@ -20,8 +21,8 @@ import {
 } from '@/components/ui/sidebar';
 
 import logo from '@/assets/logo.svg';
+
 import { NavUser } from './NavUser';
-import { cn } from '@/lib/utils';
 
 // Menu items.
 const items = [
@@ -33,6 +34,11 @@ const items = [
   {
     title: 'Professores',
     url: '/teachers',
+    icon: Presentation,
+  },
+  {
+    title: 'Usuários',
+    url: '/users',
     icon: Presentation,
   },
   {
