@@ -1,8 +1,10 @@
 // import { Link } from '@tanstack/react-router';
 
-import { StatisticInfo } from '@/components/StatisticInfo';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Monitor, UserCheck, UsersRound } from 'lucide-react';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { StatisticInfo } from '@/components/StatisticInfo';
+
 import { columns } from './Columns';
 import { DataTable } from './DataTable';
 import { data } from './mockData';
