@@ -2,10 +2,10 @@ import { Navigate, Outlet } from '@tanstack/react-router';
 
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthenticated } from '@/hooks/useAuthenticated';
 
 export const DashboardLayout = () => {
-  const { isValid } = useAuth();
+  const { isValid } = useAuthenticated();
 
   if (!isValid) {
     return <Navigate to='/login' />;

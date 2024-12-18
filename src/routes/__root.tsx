@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { createRootRouteWithContext, Outlet, useNavigate } from '@tanstack/react-router';
 
 import { Loading } from '@/components/Loading';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthenticated } from '@/hooks/useAuthenticated';
 
 
 const TanStackRouterDevtools = import.meta.env.PROD
@@ -24,7 +24,7 @@ const TailwindIndicator = import.meta.env.PROD
 // Defining the type for the router context
 
 const Root = () => {
-  const { isValid } = useAuth();
+  const { isValid } = useAuthenticated();
   const navigate = useNavigate();
 
   if (isValid) {

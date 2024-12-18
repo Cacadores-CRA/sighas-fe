@@ -10,208 +10,238 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as DashboardImport } from './routes/_dashboard'
-import { Route as AuthImport } from './routes/_auth'
-import { Route as DashboardTeachersImport } from './routes/_dashboard/teachers'
-import { Route as DashboardHomeImport } from './routes/_dashboard/home'
-import { Route as AuthRegisterImport } from './routes/_auth/register'
-import { Route as AuthLoginImport } from './routes/_auth/login'
-import { Route as AuthForgetPasswordImport } from './routes/_auth/forget-password'
+import { Route as rootRoute } from './routes/__root';
+import {
+  Route as AuthImport,
+  Route as AuthLoginImport,
+  Route as IndexImport,
+} from './routes/_auth';
+import { Route as AuthForgetPasswordImport } from './routes/_auth/forget-password';
+import { Route as AuthRegisterImport } from './routes/_auth/register';
+import { Route as DashboardImport } from './routes/_dashboard';
+import { Route as DashboardHomeImport } from './routes/_dashboard/home';
+import { Route as DashboardTeachersImport } from './routes/_dashboard/teachers';
 
 // Create/Update Routes
 
 const DashboardRoute = DashboardImport.update({
   id: '/_dashboard',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const AuthRoute = AuthImport.update({
   id: '/_auth',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
+
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any);
 
 const DashboardTeachersRoute = DashboardTeachersImport.update({
   id: '/teachers',
   path: '/teachers',
   getParentRoute: () => DashboardRoute,
-} as any)
+} as any);
 
 const DashboardHomeRoute = DashboardHomeImport.update({
   id: '/home',
   path: '/home',
   getParentRoute: () => DashboardRoute,
-} as any)
+} as any);
 
 const AuthRegisterRoute = AuthRegisterImport.update({
   id: '/register',
   path: '/register',
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 
 const AuthLoginRoute = AuthLoginImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 
 const AuthForgetPasswordRoute = AuthForgetPasswordImport.update({
   id: '/forget-password',
   path: '/forget-password',
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
     '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/_auth';
+      path: '';
+      fullPath: '';
+      preLoaderRoute: typeof AuthImport;
+      parentRoute: typeof rootRoute;
+    };
     '/_dashboard': {
-      id: '/_dashboard'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof DashboardImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/_dashboard';
+      path: '';
+      fullPath: '';
+      preLoaderRoute: typeof DashboardImport;
+      parentRoute: typeof rootRoute;
+    };
     '/_auth/forget-password': {
-      id: '/_auth/forget-password'
-      path: '/forget-password'
-      fullPath: '/forget-password'
-      preLoaderRoute: typeof AuthForgetPasswordImport
-      parentRoute: typeof AuthImport
-    }
+      id: '/_auth/forget-password';
+      path: '/forget-password';
+      fullPath: '/forget-password';
+      preLoaderRoute: typeof AuthForgetPasswordImport;
+      parentRoute: typeof AuthImport;
+    };
     '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginImport
-      parentRoute: typeof AuthImport
-    }
+      id: '/_auth/login';
+      path: '/login';
+      fullPath: '/login';
+      preLoaderRoute: typeof AuthLoginImport;
+      parentRoute: typeof AuthImport;
+    };
     '/_auth/register': {
-      id: '/_auth/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof AuthRegisterImport
-      parentRoute: typeof AuthImport
-    }
+      id: '/_auth/register';
+      path: '/register';
+      fullPath: '/register';
+      preLoaderRoute: typeof AuthRegisterImport;
+      parentRoute: typeof AuthImport;
+    };
     '/_dashboard/home': {
-      id: '/_dashboard/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof DashboardHomeImport
-      parentRoute: typeof DashboardImport
-    }
+      id: '/_dashboard/home';
+      path: '/home';
+      fullPath: '/home';
+      preLoaderRoute: typeof DashboardHomeImport;
+      parentRoute: typeof DashboardImport;
+    };
     '/_dashboard/teachers': {
-      id: '/_dashboard/teachers'
-      path: '/teachers'
-      fullPath: '/teachers'
-      preLoaderRoute: typeof DashboardTeachersImport
-      parentRoute: typeof DashboardImport
-    }
+      id: '/_dashboard/teachers';
+      path: '/teachers';
+      fullPath: '/teachers';
+      preLoaderRoute: typeof DashboardTeachersImport;
+      parentRoute: typeof DashboardImport;
+    };
   }
 }
 
 // Create and export the route tree
 
 interface AuthRouteChildren {
-  AuthForgetPasswordRoute: typeof AuthForgetPasswordRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthForgetPasswordRoute: typeof AuthForgetPasswordRoute;
+  AuthLoginRoute: typeof AuthLoginRoute;
+  AuthRegisterRoute: typeof AuthRegisterRoute;
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthForgetPasswordRoute: AuthForgetPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
-}
+};
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
 
 interface DashboardRouteChildren {
-  DashboardHomeRoute: typeof DashboardHomeRoute
-  DashboardTeachersRoute: typeof DashboardTeachersRoute
+  DashboardHomeRoute: typeof DashboardHomeRoute;
+  DashboardTeachersRoute: typeof DashboardTeachersRoute;
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardHomeRoute: DashboardHomeRoute,
   DashboardTeachersRoute: DashboardTeachersRoute,
-}
+};
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
-  DashboardRouteChildren,
-)
+  DashboardRouteChildren
+);
 
 export interface FileRoutesByFullPath {
-  '': typeof DashboardRouteWithChildren
-  '/forget-password': typeof AuthForgetPasswordRoute
-  '/login': typeof AuthLoginRoute
-  '/register': typeof AuthRegisterRoute
-  '/home': typeof DashboardHomeRoute
-  '/teachers': typeof DashboardTeachersRoute
+  '/': typeof IndexRoute;
+  '': typeof DashboardRouteWithChildren;
+  '/forget-password': typeof AuthForgetPasswordRoute;
+  '/login': typeof AuthLoginRoute;
+  '/register': typeof AuthRegisterRoute;
+  '/home': typeof DashboardHomeRoute;
+  '/teachers': typeof DashboardTeachersRoute;
 }
 
 export interface FileRoutesByTo {
-  '': typeof DashboardRouteWithChildren
-  '/forget-password': typeof AuthForgetPasswordRoute
-  '/login': typeof AuthLoginRoute
-  '/register': typeof AuthRegisterRoute
-  '/home': typeof DashboardHomeRoute
-  '/teachers': typeof DashboardTeachersRoute
+  '/': typeof IndexRoute;
+  '': typeof DashboardRouteWithChildren;
+  '/forget-password': typeof AuthForgetPasswordRoute;
+  '/login': typeof AuthLoginRoute;
+  '/register': typeof AuthRegisterRoute;
+  '/home': typeof DashboardHomeRoute;
+  '/teachers': typeof DashboardTeachersRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/_auth': typeof AuthRouteWithChildren
-  '/_dashboard': typeof DashboardRouteWithChildren
-  '/_auth/forget-password': typeof AuthForgetPasswordRoute
-  '/_auth/login': typeof AuthLoginRoute
-  '/_auth/register': typeof AuthRegisterRoute
-  '/_dashboard/home': typeof DashboardHomeRoute
-  '/_dashboard/teachers': typeof DashboardTeachersRoute
+  __root__: typeof rootRoute;
+  '/': typeof IndexRoute;
+  '/_auth': typeof AuthRouteWithChildren;
+  '/_dashboard': typeof DashboardRouteWithChildren;
+  '/_auth/forget-password': typeof AuthForgetPasswordRoute;
+  '/_auth/login': typeof AuthLoginRoute;
+  '/_auth/register': typeof AuthRegisterRoute;
+  '/_dashboard/home': typeof DashboardHomeRoute;
+  '/_dashboard/teachers': typeof DashboardTeachersRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
+    | '/'
     | ''
     | '/forget-password'
     | '/login'
     | '/register'
     | '/home'
-    | '/teachers'
-  fileRoutesByTo: FileRoutesByTo
-  to: '' | '/forget-password' | '/login' | '/register' | '/home' | '/teachers'
+    | '/teachers';
+  fileRoutesByTo: FileRoutesByTo;
+  to:
+    | '/'
+    | ''
+    | '/forget-password'
+    | '/login'
+    | '/register'
+    | '/home'
+    | '/teachers';
   id:
     | '__root__'
+    | '/'
     | '/_auth'
     | '/_dashboard'
     | '/_auth/forget-password'
     | '/_auth/login'
     | '/_auth/register'
     | '/_dashboard/home'
-    | '/_dashboard/teachers'
-  fileRoutesById: FileRoutesById
+    | '/_dashboard/teachers';
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  AuthRoute: typeof AuthRouteWithChildren
-  DashboardRoute: typeof DashboardRouteWithChildren
+  IndexRoute: typeof IndexRoute;
+  AuthRoute: typeof AuthRouteWithChildren;
+  DashboardRoute: typeof DashboardRouteWithChildren;
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
-}
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {
@@ -219,9 +249,13 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/",
         "/_auth",
         "/_dashboard"
       ]
+    },
+    "/": {
+      "filePath": "index.tsx"
     },
     "/_auth": {
       "filePath": "_auth.tsx",
