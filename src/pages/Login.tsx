@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 
 import {
   Form,
@@ -27,6 +29,8 @@ export const LoginPage = () => {
     },
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const onSubmit = async (data: z.infer<typeof formLoginSchema>) => {
     try {
       await mutateAsync(data);
@@ -41,7 +45,7 @@ export const LoginPage = () => {
     <div className='flex flex-col flex-1 gap-4 items-center justify-center'>
       <div className='flex flex-col gap-4 items-center justify-center'>
         <h1 className='text-6xl font-bold text-primary'>SIGHAS</h1>
-        <h2 className='text-4xl font-medium text-zinc-800 '>Login</h2>
+        <h2 className='text-2xl font-medium text-zinc-800 '>Login</h2>
       </div>
 
       <Form {...form}>
@@ -75,14 +79,21 @@ export const LoginPage = () => {
               <FormItem>
                 <Label>Senha</Label>
                 <FormControl>
-                  {/* <Label>Senha</Label> */}
-                  {/* TODO: Add password lock icon and a show/hide password button */}
-                  <Input
-                    placeholder='Digita sua senha'
-                    type='password'
-                    required
-                    {...field}
-                  />
+                  <div className="relative">
+                    <Input
+                      placeholder='Digita sua senha'
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      {...field}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    >
+                      {showPassword ? <EyeOff /> : <Eye />}
+                    </button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
