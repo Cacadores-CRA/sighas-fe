@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTeachersList } from '@/services/teachers/useListTearchers';
+import { Link } from '@tanstack/react-router';
 import { Search, UserPlus } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -66,7 +67,9 @@ export function TeachersPage() {
                 filteredTeachers.map((teacher) => (
                   <TableRow key={teacher.userId}>
                     <TableCell className='font-medium'>
-                      {teacher.name}
+                      <Link to={`/teachers/${teacher.userId}`}>
+                        {teacher.name}
+                      </Link>
                     </TableCell>
                     <TableCell>{teacher.institutionalEmail}</TableCell>
                     <TableCell>{teacher.siape}</TableCell>
