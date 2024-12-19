@@ -13,7 +13,6 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as DashboardImport } from './routes/_dashboard'
 import { Route as AuthImport } from './routes/_auth'
-import { Route as IndexImport } from './routes/index'
 import { Route as DashboardUsersImport } from './routes/_dashboard/users'
 import { Route as DashboardTeachersImport } from './routes/_dashboard/teachers'
 import { Route as DashboardHomeImport } from './routes/_dashboard/home'
@@ -30,12 +29,6 @@ const DashboardRoute = DashboardImport.update({
 
 const AuthRoute = AuthImport.update({
   id: '/_auth',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -214,14 +207,13 @@ export interface FileRouteTypes {
     | '/users'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | ''
     | '/forget-password'
     | '/login'
     | '/register'
+    | '/home'
     | '/teachers'
     | '/users'
-  to: '' | '/forget-password' | '/login' | '/register' | '/home' | '/teachers'
   id:
     | '__root__'
     | '/_auth'
@@ -270,10 +262,9 @@ export const routeTree = rootRoute
     "/_dashboard": {
       "filePath": "_dashboard.tsx",
       "children": [
+        "/_dashboard/home",
         "/_dashboard/teachers",
         "/_dashboard/users"
-        "/_dashboard/home",
-        "/_dashboard/teachers"
       ]
     },
     "/_auth/forget-password": {
