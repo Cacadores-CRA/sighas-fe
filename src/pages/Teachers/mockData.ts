@@ -1,4 +1,4 @@
-export type UserData = {
+export type TeacherData = {
   name: string;
   email: string;
   siape: string;
@@ -7,7 +7,7 @@ export type UserData = {
   status: string;
 };
 
-export const data: UserData[] = [
+export const data: TeacherData[] = [
   {
     name: 'Ana Maria',
     email: 'ana.maria@ifal.edu.br',

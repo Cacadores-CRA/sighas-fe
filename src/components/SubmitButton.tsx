@@ -1,7 +1,8 @@
-import { Button, type ButtonProps } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 import { useFormState } from 'react-hook-form';
+
+import { Button, type ButtonProps } from '@/components/ui/button';
 
 type SubmitButtonProps = {
   disableIfInvalid?: boolean;
