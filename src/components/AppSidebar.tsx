@@ -67,6 +67,8 @@ const items = [
 export function AppSidebar() {
   const pathname = window.location.pathname;
 
+  console.log({ pathname });
+
   return (
     <Sidebar>
       <SidebarHeader className='pt-8 px-6 '>

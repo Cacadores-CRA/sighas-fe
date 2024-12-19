@@ -16,7 +16,11 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as DashboardUsersImport } from './routes/_dashboard/users'
 import { Route as DashboardTeachersImport } from './routes/_dashboard/teachers'
+import { Route as DashboardSubjectsImport } from './routes/_dashboard/subjects'
+import { Route as DashboardStudentsImport } from './routes/_dashboard/students'
+import { Route as DashboardRoomsImport } from './routes/_dashboard/rooms'
 import { Route as DashboardHomeImport } from './routes/_dashboard/home'
+import { Route as DashboardCoursesImport } from './routes/_dashboard/courses'
 import { Route as AuthRegisterImport } from './routes/_auth/register'
 import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as AuthForgetPasswordImport } from './routes/_auth/forget-password'
@@ -51,9 +55,33 @@ const DashboardTeachersRoute = DashboardTeachersImport.update({
   getParentRoute: () => DashboardRoute,
 } as any)
 
+const DashboardSubjectsRoute = DashboardSubjectsImport.update({
+  id: '/subjects',
+  path: '/subjects',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardStudentsRoute = DashboardStudentsImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardRoomsRoute = DashboardRoomsImport.update({
+  id: '/rooms',
+  path: '/rooms',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
 const DashboardHomeRoute = DashboardHomeImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardCoursesRoute = DashboardCoursesImport.update({
+  id: '/courses',
+  path: '/courses',
   getParentRoute: () => DashboardRoute,
 } as any)
 
@@ -121,11 +149,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterImport
       parentRoute: typeof AuthImport
     }
+    '/_dashboard/courses': {
+      id: '/_dashboard/courses'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof DashboardCoursesImport
+      parentRoute: typeof DashboardImport
+    }
     '/_dashboard/home': {
       id: '/_dashboard/home'
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof DashboardHomeImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/rooms': {
+      id: '/_dashboard/rooms'
+      path: '/rooms'
+      fullPath: '/rooms'
+      preLoaderRoute: typeof DashboardRoomsImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/students': {
+      id: '/_dashboard/students'
+      path: '/students'
+      fullPath: '/students'
+      preLoaderRoute: typeof DashboardStudentsImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/subjects': {
+      id: '/_dashboard/subjects'
+      path: '/subjects'
+      fullPath: '/subjects'
+      preLoaderRoute: typeof DashboardSubjectsImport
       parentRoute: typeof DashboardImport
     }
     '/_dashboard/teachers': {
@@ -162,13 +218,21 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardCoursesRoute: typeof DashboardCoursesRoute
   DashboardHomeRoute: typeof DashboardHomeRoute
+  DashboardRoomsRoute: typeof DashboardRoomsRoute
+  DashboardStudentsRoute: typeof DashboardStudentsRoute
+  DashboardSubjectsRoute: typeof DashboardSubjectsRoute
   DashboardTeachersRoute: typeof DashboardTeachersRoute
   DashboardUsersRoute: typeof DashboardUsersRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardCoursesRoute: DashboardCoursesRoute,
   DashboardHomeRoute: DashboardHomeRoute,
+  DashboardRoomsRoute: DashboardRoomsRoute,
+  DashboardStudentsRoute: DashboardStudentsRoute,
+  DashboardSubjectsRoute: DashboardSubjectsRoute,
   DashboardTeachersRoute: DashboardTeachersRoute,
   DashboardUsersRoute: DashboardUsersRoute,
 }
@@ -183,7 +247,11 @@ export interface FileRoutesByFullPath {
   '/forget-password': typeof AuthForgetPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
+  '/courses': typeof DashboardCoursesRoute
   '/home': typeof DashboardHomeRoute
+  '/rooms': typeof DashboardRoomsRoute
+  '/students': typeof DashboardStudentsRoute
+  '/subjects': typeof DashboardSubjectsRoute
   '/teachers': typeof DashboardTeachersRoute
   '/users': typeof DashboardUsersRoute
 }
@@ -194,7 +262,11 @@ export interface FileRoutesByTo {
   '/forget-password': typeof AuthForgetPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
+  '/courses': typeof DashboardCoursesRoute
   '/home': typeof DashboardHomeRoute
+  '/rooms': typeof DashboardRoomsRoute
+  '/students': typeof DashboardStudentsRoute
+  '/subjects': typeof DashboardSubjectsRoute
   '/teachers': typeof DashboardTeachersRoute
   '/users': typeof DashboardUsersRoute
 }
@@ -207,7 +279,11 @@ export interface FileRoutesById {
   '/_auth/forget-password': typeof AuthForgetPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
+  '/_dashboard/courses': typeof DashboardCoursesRoute
   '/_dashboard/home': typeof DashboardHomeRoute
+  '/_dashboard/rooms': typeof DashboardRoomsRoute
+  '/_dashboard/students': typeof DashboardStudentsRoute
+  '/_dashboard/subjects': typeof DashboardSubjectsRoute
   '/_dashboard/teachers': typeof DashboardTeachersRoute
   '/_dashboard/users': typeof DashboardUsersRoute
 }
@@ -220,7 +296,11 @@ export interface FileRouteTypes {
     | '/forget-password'
     | '/login'
     | '/register'
+    | '/courses'
     | '/home'
+    | '/rooms'
+    | '/students'
+    | '/subjects'
     | '/teachers'
     | '/users'
   fileRoutesByTo: FileRoutesByTo
@@ -230,7 +310,11 @@ export interface FileRouteTypes {
     | '/forget-password'
     | '/login'
     | '/register'
+    | '/courses'
     | '/home'
+    | '/rooms'
+    | '/students'
+    | '/subjects'
     | '/teachers'
     | '/users'
   id:
@@ -241,7 +325,11 @@ export interface FileRouteTypes {
     | '/_auth/forget-password'
     | '/_auth/login'
     | '/_auth/register'
+    | '/_dashboard/courses'
     | '/_dashboard/home'
+    | '/_dashboard/rooms'
+    | '/_dashboard/students'
+    | '/_dashboard/subjects'
     | '/_dashboard/teachers'
     | '/_dashboard/users'
   fileRoutesById: FileRoutesById
@@ -288,7 +376,11 @@ export const routeTree = rootRoute
     "/_dashboard": {
       "filePath": "_dashboard.tsx",
       "children": [
+        "/_dashboard/courses",
         "/_dashboard/home",
+        "/_dashboard/rooms",
+        "/_dashboard/students",
+        "/_dashboard/subjects",
         "/_dashboard/teachers",
         "/_dashboard/users"
       ]
@@ -305,8 +397,24 @@ export const routeTree = rootRoute
       "filePath": "_auth/register.tsx",
       "parent": "/_auth"
     },
+    "/_dashboard/courses": {
+      "filePath": "_dashboard/courses.tsx",
+      "parent": "/_dashboard"
+    },
     "/_dashboard/home": {
       "filePath": "_dashboard/home.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/rooms": {
+      "filePath": "_dashboard/rooms.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/students": {
+      "filePath": "_dashboard/students.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/subjects": {
+      "filePath": "_dashboard/subjects.tsx",
       "parent": "/_dashboard"
     },
     "/_dashboard/teachers": {
