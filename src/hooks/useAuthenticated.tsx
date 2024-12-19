@@ -1,3 +1,5 @@
+
+
 interface AuthData {
   token: string;
   expiresIn: string;
@@ -7,7 +9,7 @@ interface AuthData {
   };
 }
 
-export const useAuth = (): {
+export const useAuthenticated = (): {
   isValid: boolean;
   userData: AuthData | null;
 } => {
@@ -37,4 +39,5 @@ export const useAuth = (): {
 
 export const logout = () => {
   localStorage.removeItem('auth');
+  window.location.href = '/login';
 };

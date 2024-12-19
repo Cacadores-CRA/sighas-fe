@@ -1,9 +1,9 @@
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthenticated } from '@/hooks/useAuthenticated';
 import { useNavigate } from '@tanstack/react-router';
 import { Outlet } from '@tanstack/react-router';
 
 export const AuthLayout = () => {
-  const { isValid } = useAuth();
+  const { isValid } = useAuthenticated();
   const navigate = useNavigate();
 
   if (isValid) {

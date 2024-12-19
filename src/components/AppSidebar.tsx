@@ -31,7 +31,7 @@ import { Link } from '@tanstack/react-router';
 const items = [
   {
     title: 'Home',
-    url: '/',
+    url: '/home',
     icon: Home,
   },
   {

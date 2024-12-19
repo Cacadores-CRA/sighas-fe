@@ -1,12 +1,12 @@
 import { formLoginSchema } from '@/schema/Login';
+import { useAuth } from '@/services/auth/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
-import axios from 'axios';
-// import { Link } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -16,19 +16,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-// Add this interface for the response type
-interface AuthResponse {
-  token: string;
-  expiresIn: string;
-  user: {
-    username: string;
-    // add other user fields as needed
-  };
-}
+import { SubmitButton } from '@/components/SubmitButton';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const { mutateAsync } = useAuth();
   const form = useForm<z.infer<typeof formLoginSchema>>({
     resolver: zodResolver(formLoginSchema),
     defaultValues: {
@@ -37,29 +29,15 @@ export const LoginPage = () => {
     },
   });
 
-  
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: z.infer<typeof formLoginSchema>) => {
     try {
-      const response = await axios.post<AuthResponse>(
-        'http://localhost:8080/v1/auth',
-        data
-      );
-
-      // Save auth data to localStorage
-      const authData = {
-        token: response.data.token,
-        expiresIn: response.data.expiresIn,
-        user: response.data.user,
-      };
-
-      localStorage.setItem('auth', JSON.stringify(authData));
-
+      await mutateAsync(data);
       // Navigate to dashboard after successful login
       navigate({ to: '/home' });
     } catch (error) {
       console.error('Login failed:', error);
-      // Handle login error here
     }
   };
 
@@ -67,14 +45,7 @@ export const LoginPage = () => {
     <div className='flex flex-col flex-1 gap-4 items-center justify-center'>
       <div className='flex flex-col gap-4 items-center justify-center'>
         <h1 className='text-6xl font-bold text-primary'>SIGHAS</h1>
-        <h2 className='text-4xl font-medium text-zinc-800 '>Login</h2>
-
-        {/* <div className='flex  items-center gap-2'>
-          <p className=' text-zinc-500 text-base'>Novo no SIGHAS?</p>
-          <Link to='/register' className='text-primary underline text-base'>
-            Registre-se gratuitamente
-          </Link>
-        </div> */}
+        <h2 className='text-2xl font-medium text-zinc-800 '>Login</h2>
       </div>
 
       <Form {...form}>
@@ -108,14 +79,21 @@ export const LoginPage = () => {
               <FormItem>
                 <Label>Senha</Label>
                 <FormControl>
-                  {/* <Label>Senha</Label> */}
-                  {/* TODO: Add password lock icon and a show/hide password button */}
-                  <Input
-                    placeholder='Digita sua senha'
-                    type='password'
-                    required
-                    {...field}
-                  />
+                  <div className="relative">
+                    <Input
+                      placeholder='Digita sua senha'
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      {...field}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    >
+                      {showPassword ? <EyeOff /> : <Eye />}
+                    </button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -129,7 +107,7 @@ export const LoginPage = () => {
             Esqueceu sua senha?
           </Link>
 
-          <Button
+          <SubmitButton
             color='#172554'
             size='lg'
             className='text-white bg-primary hover:bg-primary/90 mt-4'
@@ -137,7 +115,7 @@ export const LoginPage = () => {
             disabled={Object.keys(form.formState.errors).length > 0}
           >
             Login
-          </Button>
+          </SubmitButton>
           <div className='flex w-full items-center justify-center'></div>
         </form>
       </Form>
