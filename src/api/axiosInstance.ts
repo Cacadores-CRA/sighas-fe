@@ -25,6 +25,22 @@ AXIOS_INSTANCE.interceptors.request.use(
   }
 );
 
+// Add response interceptor to handle 401 errors
+AXIOS_INSTANCE.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Clear localStorage
+      localStorage.clear();
+      localStorage.removeItem('token');
+
+      // Redirect to login page
+      window.location.href = '/login'; // Using window.location since we're outside React context
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const customInstance = async <T>(config: AxiosRequestConfig) => {
   const { data } = await AXIOS_INSTANCE(config);
   return data as T;

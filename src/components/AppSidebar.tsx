@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 import {
   BookOpen,
   GraduationCap,
@@ -65,7 +65,8 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const pathname = window.location.pathname;
+  const location = useLocation();
+  const pathname = location.pathname;
 
   console.log({ pathname });
 
@@ -84,7 +85,8 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     className={cn(
-                      pathname === item.url && 'bg-sidebar-accent *:text-white'
+                      pathname.startsWith(item.url) &&
+                        'bg-sidebar-accent *:text-white'
                     )}
                   >
                     <Link to={item.url}>

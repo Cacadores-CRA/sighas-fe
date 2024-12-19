@@ -1,56 +1,392 @@
-import { Monitor, UserCheck, UsersRound } from 'lucide-react';
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StatisticInfo } from '@/components/StatisticInfo';
+import { useState } from 'react';
+import { BarChart3, ChevronDown, Plus, Search } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const CoursesPage = () => {
+  const [selectedTab, setSelectedTab] = useState<string>('overview');
+  const [isAddCourseOpen, setIsAddCourseOpen] = useState(false);
+  const [newCourse, setNewCourse] = useState({
+    name: '',
+    department: '',
+    status: 'Ativo',
+  });
+
+  const handleAddCourse = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Here you would typically send this data to your backend
+    console.log('New course:', newCourse);
+    setIsAddCourseOpen(false);
+    setNewCourse({ name: '', department: '', status: 'Ativo' });
+  };
+
   return (
-    <div className='w-full'>
-      <div className='flex flex-col gap-16 h-full'>
-        <Card className='w-full'>
-          <CardContent className='p-0'>
-            <div className='flex p-8 items-center justify-between'>
-              <StatisticInfo
-                title='Total Professores'
-                amount={5423}
-                subtitle='16% Este mês'
-                status='increase'
-                icon={<UsersRound className='text-emerald-600 size-11' />}
-              />
-              <StatisticInfo
-                title='Professores Ativos'
-                amount={1893}
-                subtitle='1% Este mês'
-                status='decrease'
-                icon={<UserCheck className='text-emerald-600 size-11' />}
-              />
-              <StatisticInfo
-                title='Professores Inativos'
-                amount={189}
-                status='increase'
-                icon={<Monitor className='text-emerald-600 size-11' />}
-              />
-            </div>
-          </CardContent>
-        </Card>
-        <Card className='w-full rounded-[40px] px-9 py-7'>
-          <CardHeader>
-            <CardTitle className='text-2xl leading-3 font-semibold'>
-              Todas os cursos
+    <div className='min-h-screen  bg-white  rounded-md p-8'>
+      <header className='mb-8'>
+        <h1 className='text-4xl font-bold text-slate-900'>Cursos</h1>
+        <p className='text-slate-500'>
+          Gerencie todos os cursos da instituição
+        </p>
+      </header>
+
+      {/* Stats Cards */}
+      <div className='mb-8 grid gap-6 md:grid-cols-3'>
+        <Card className='bg-white shadow-lg transition-shadow hover:shadow-xl'>
+          <CardHeader className='flex flex-row items-center justify-between pb-2'>
+            <CardTitle className='text-lg font-medium'>
+              Total de Cursos
             </CardTitle>
-            {/* <CardDescription>
-              Deploy your new project in one-click.
-            </CardDescription> */}
+            <BarChart3 className='h-5 w-5 text-blue-500' />
           </CardHeader>
-          <CardContent className='p-0 px-7'>
-            {/* <DataTable columns={columns} data={data} /> */}
+          <CardContent>
+            <div className='text-3xl font-bold text-slate-900'>42</div>
+            <p className='text-sm font-medium text-green-500'>+2 este mês</p>
           </CardContent>
-          {/* <CardFooter className='flex justify-between'>
-            <Button variant='outline'>Cancel</Button>
-            <Button>Deploy</Button>
-          </CardFooter> */}
         </Card>
+        <Card className='bg-white shadow-lg transition-shadow hover:shadow-xl'>
+          <CardHeader className='flex flex-row items-center justify-between pb-2'>
+            <CardTitle className='text-lg font-medium'>Cursos Ativos</CardTitle>
+            <BarChart3 className='h-5 w-5 text-green-500' />
+          </CardHeader>
+          <CardContent>
+            <div className='text-3xl font-bold text-slate-900'>38</div>
+            <p className='text-sm font-medium text-slate-500'>90% do total</p>
+          </CardContent>
+        </Card>
+        <Card className='bg-white shadow-lg transition-shadow hover:shadow-xl'>
+          <CardHeader className='flex flex-row items-center justify-between pb-2'>
+            <CardTitle className='text-lg font-medium'>
+              Alunos Matriculados
+            </CardTitle>
+            <BarChart3 className='h-5 w-5 text-purple-500' />
+          </CardHeader>
+          <CardContent>
+            <div className='text-3xl font-bold text-slate-900'>1,234</div>
+            <p className='text-sm font-medium text-green-500'>
+              +5% este semestre
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Courses Section */}
+      <div className='space-y-6'>
+        <div className='flex items-center justify-between'>
+          <h2 className='text-2xl font-bold text-slate-900'>Todos os cursos</h2>
+          <Dialog open={isAddCourseOpen} onOpenChange={setIsAddCourseOpen}>
+            <DialogTrigger asChild>
+              <Button className='bg-blue-500 hover:bg-blue-600'>
+                <Plus className='mr-2 h-4 w-4' /> Adicionar Curso
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='sm:max-w-[425px]'>
+              <DialogHeader>
+                <DialogTitle>Adicionar Novo Curso</DialogTitle>
+                <DialogDescription>
+                  Preencha os detalhes do novo curso abaixo.
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleAddCourse}>
+                <div className='grid gap-4 py-4'>
+                  <div className='grid grid-cols-4 items-center gap-4'>
+                    <Label htmlFor='name' className='text-right'>
+                      Nome
+                    </Label>
+                    <Input
+                      id='name'
+                      value={newCourse.name}
+                      onChange={(e) =>
+                        setNewCourse({ ...newCourse, name: e.target.value })
+                      }
+                      className='col-span-3'
+                    />
+                  </div>
+                  <div className='grid grid-cols-4 items-center gap-4'>
+                    <Label htmlFor='department' className='text-right'>
+                      Departamento
+                    </Label>
+                    <Input
+                      id='department'
+                      value={newCourse.department}
+                      onChange={(e) =>
+                        setNewCourse({
+                          ...newCourse,
+                          department: e.target.value,
+                        })
+                      }
+                      className='col-span-3'
+                    />
+                  </div>
+                  <div className='grid grid-cols-4 items-center gap-4'>
+                    <Label htmlFor='status' className='text-right'>
+                      Status
+                    </Label>
+                    <Select
+                      onValueChange={(value) =>
+                        setNewCourse({ ...newCourse, status: value })
+                      }
+                      defaultValue={newCourse.status}
+                    >
+                      <SelectTrigger className='col-span-3'>
+                        <SelectValue placeholder='Selecione o status' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='Ativo'>Ativo</SelectItem>
+                        <SelectItem value='Em Pausa'>Em Pausa</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type='submit'>Adicionar Curso</Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <div className='rounded-lg border bg-white shadow-lg'>
+          <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+            <div className='border-b p-4'>
+              <div className='flex flex-col gap-4 sm:flex-row sm:items-center'>
+                <div className='relative flex-1'>
+                  <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-slate-400' />
+                  <Input placeholder='Buscar cursos...' className='pl-10' />
+                </div>
+                <TabsList className='grid w-full grid-cols-3 sm:w-auto'>
+                  <TabsTrigger value='overview'>Visão Geral</TabsTrigger>
+                  <TabsTrigger value='analytics'>Análise</TabsTrigger>
+                  <TabsTrigger value='reports'>Relatórios</TabsTrigger>
+                </TabsList>
+              </div>
+            </div>
+
+            <TabsContent value='overview'>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome do Curso</TableHead>
+                    <TableHead>Departamento</TableHead>
+                    <TableHead>Professores</TableHead>
+                    <TableHead>Alunos</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {courses.map((course) => (
+                    <TableRow key={course.id}>
+                      <TableCell className='font-medium'>
+                        {course.name}
+                      </TableCell>
+                      <TableCell>{course.department}</TableCell>
+                      <TableCell>{course.teachers}</TableCell>
+                      <TableCell>{course.students}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                            course.status === 'Ativo'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                          }`}
+                        >
+                          {course.status}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant='ghost' size='sm'>
+                              Ações <ChevronDown className='ml-2 h-4 w-4' />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align='end'>
+                            <DropdownMenuItem>Editar</DropdownMenuItem>
+                            <DropdownMenuItem>Ver detalhes</DropdownMenuItem>
+                            <DropdownMenuItem className='text-red-600'>
+                              Desativar
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TabsContent>
+
+            <TabsContent value='analytics' className='p-6'>
+              <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Média de Alunos</CardTitle>
+                    <CardDescription>por curso</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className='text-3xl font-bold'>45.2</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Taxa de Conclusão</CardTitle>
+                    <CardDescription>últimos 12 meses</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className='text-3xl font-bold'>78%</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Satisfação dos Alunos</CardTitle>
+                    <CardDescription>média geral</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className='text-3xl font-bold'>4.7/5</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Receita Total</CardTitle>
+                    <CardDescription>ano corrente</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className='text-3xl font-bold'>R$ 1.2M</div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value='reports' className='p-6'>
+              <div className='grid gap-6'>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Relatórios Disponíveis</CardTitle>
+                    <CardDescription>
+                      Selecione um relatório para visualizar
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className='space-y-2'>
+                      <li>
+                        <Button
+                          variant='outline'
+                          className='w-full justify-start'
+                        >
+                          <BarChart3 className='mr-2 h-4 w-4' />
+                          Desempenho dos Cursos
+                        </Button>
+                      </li>
+                      <li>
+                        <Button
+                          variant='outline'
+                          className='w-full justify-start'
+                        >
+                          <BarChart3 className='mr-2 h-4 w-4' />
+                          Tendências de Matrícula
+                        </Button>
+                      </li>
+                      <li>
+                        <Button
+                          variant='outline'
+                          className='w-full justify-start'
+                        >
+                          <BarChart3 className='mr-2 h-4 w-4' />
+                          Análise de Feedback dos Alunos
+                        </Button>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );
 };
+
+const courses = [
+  {
+    id: 1,
+    name: 'Engenharia de Software',
+    department: 'Computação',
+    teachers: 12,
+    students: 150,
+    status: 'Ativo',
+  },
+  {
+    id: 2,
+    name: 'Arquitetura',
+    department: 'Engenharia',
+    teachers: 8,
+    students: 120,
+    status: 'Ativo',
+  },
+  {
+    id: 3,
+    name: 'Administração',
+    department: 'Negócios',
+    teachers: 15,
+    students: 200,
+    status: 'Ativo',
+  },
+  {
+    id: 4,
+    name: 'Design Digital',
+    department: 'Artes',
+    teachers: 6,
+    students: 80,
+    status: 'Em Pausa',
+  },
+  {
+    id: 5,
+    name: 'Medicina',
+    department: 'Saúde',
+    teachers: 25,
+    students: 100,
+    status: 'Ativo',
+  },
+];

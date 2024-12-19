@@ -1,60 +1,105 @@
-import { Monitor, UserCheck, UsersRound } from 'lucide-react';
+import { useState } from 'react';
+import { useTeachersList } from '@/services/teachers/useListTearchers';
+import { Search, UserPlus } from 'lucide-react';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StatisticInfo } from '@/components/StatisticInfo';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { AddTeacherModal } from '@/components/modals/AddTeacher';
 
-import { columns } from './Columns';
-import { DataTable } from './DataTable';
-import { data } from './mockData';
+export function TeachersPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const { data: teachers } = useTeachersList();
 
-export const TeachersPage = () => {
-  return (
-    <div className='w-full'>
-      <div className='flex flex-col gap-16 h-full'>
-        <Card className='w-full'>
-          <CardContent className='p-0'>
-            <div className='flex p-8 items-center justify-between'>
-              <StatisticInfo
-                title='Total Professores'
-                amount={5423}
-                subtitle='16% Este mês'
-                status='increase'
-                icon={<UsersRound className='text-emerald-600 size-11' />}
-              />
-              <StatisticInfo
-                title='Professores Ativos'
-                amount={1893}
-                subtitle='1% Este mês'
-                status='decrease'
-                icon={<UserCheck className='text-emerald-600 size-11' />}
-              />
-              <StatisticInfo
-                title='Professores Inativos'
-                amount={189}
-                status='increase'
-                icon={<Monitor className='text-emerald-600 size-11' />}
-              />
-            </div>
-          </CardContent>
-        </Card>
-        <Card className='w-full rounded-[40px] px-9 py-7'>
-          <CardHeader>
-            <CardTitle className='text-2xl leading-3 font-semibold'>
-              Todos os professores
-            </CardTitle>
-            {/* <CardDescription>
-              Deploy your new project in one-click.
-            </CardDescription> */}
-          </CardHeader>
-          <CardContent className='p-0 px-7'>
-            <DataTable columns={columns} data={data} />
-          </CardContent>
-          {/* <CardFooter className='flex justify-between'>
-            <Button variant='outline'>Cancel</Button>
-            <Button>Deploy</Button>
-          </CardFooter> */}
-        </Card>
-      </div>
-    </div>
+  const filteredTeachers = teachers?.filter(
+    (teacher) =>
+      teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      teacher.institutionalEmail
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      teacher.siape.includes(searchQuery)
   );
-};
+
+  return (
+    <Card className='w-full'>
+      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-7'>
+        <CardTitle className='text-2xl font-bold'>
+          Todos os professores
+        </CardTitle>
+        <Button onClick={() => setIsModalOpen(true)}>
+          <UserPlus className='mr-2 h-4 w-4' /> Adicionar Professor
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <div className='flex items-center space-x-2 mb-4'>
+          <Search className='text-muted-foreground' />
+          <Input
+            placeholder='Buscar professores...'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className='max-w-sm'
+          />
+        </div>
+        <div className='rounded-md border'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nome</TableHead>
+                <TableHead>Email Institucional</TableHead>
+                <TableHead>SIAPE</TableHead>
+                <TableHead>Grau de Educação</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredTeachers?.length ? (
+                filteredTeachers.map((teacher) => (
+                  <TableRow key={teacher.userId}>
+                    <TableCell className='font-medium'>
+                      {teacher.name}
+                    </TableCell>
+                    <TableCell>{teacher.institutionalEmail}</TableCell>
+                    <TableCell>{teacher.siape}</TableCell>
+                    <TableCell>{teacher.education}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          teacher.status === 'ACTIVE' ? 'default' : 'secondary'
+                        }
+                      >
+                        {teacher.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className='text-center text-muted-foreground'
+                  >
+                    Nenhum professor encontrado
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+      <AddTeacherModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </Card>
+  );
+}
