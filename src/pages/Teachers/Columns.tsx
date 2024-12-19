@@ -1,3 +1,6 @@
+import { ColumnDef } from '@tanstack/react-table';
+import { ChevronsUpDown, MoreHorizontal } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -8,11 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ColumnDef } from '@tanstack/react-table';
-import { ChevronsUpDown, MoreHorizontal } from 'lucide-react';
-import { UserData } from './mockData';
 
-export const columns: ColumnDef<UserData>[] = [
+import { TeacherData } from './mockData';
+
+export const columns: ColumnDef<TeacherData>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -64,7 +66,7 @@ export const columns: ColumnDef<UserData>[] = [
   },
   {
     accessorKey: 'education_level',
-    header: 'Gradu de Educação',
+    header: 'Grau de Educação',
     cell: ({ row }) => (
       <div className='capitalize'>{row.getValue('education_level')}</div>
     ),
