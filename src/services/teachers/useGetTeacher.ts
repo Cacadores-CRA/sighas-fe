@@ -14,17 +14,17 @@ export interface TeacherDataType {
   createdAt: string;
 }
 
-function getTeacher(userId: string) {
-  const teachers = customInstance<TeacherDataType[]>({
-    url: `/professors/${userId}`,
+function getTeacher(siape: string) {
+  const teachers = customInstance<TeacherDataType>({
+    url: `/professors/siape/${siape}`,
     method: 'GET',
   });
   return teachers;
 }
 
-export const useGetTeacher = (userId: string, queryKeys?: string[]) =>
+export const useGetTeacher = (siape: string, queryKeys?: string[]) =>
   useSuspenseQuery({
-    queryKey: ['teachers', userId, ...(queryKeys || [])],
+    queryKey: ['teachers', siape, ...(queryKeys || [])],
     refetchIntervalInBackground: true,
-    queryFn: () => getTeacher(userId),
+    queryFn: () => getTeacher(siape),
   });

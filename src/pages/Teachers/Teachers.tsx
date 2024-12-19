@@ -67,7 +67,7 @@ export function TeachersPage() {
                 filteredTeachers.map((teacher) => (
                   <TableRow key={teacher.userId}>
                     <TableCell className='font-medium'>
-                      <Link to={`/teachers/${teacher.userId}`}>
+                      <Link to={`/teachers/${teacher.siape}`}>
                         {teacher.name}
                       </Link>
                     </TableCell>
