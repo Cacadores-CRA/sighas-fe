@@ -1,43 +1,32 @@
 import { customInstance } from '@/api/axiosInstance';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export interface TeacherPayload {
+export interface StudentPayload {
   userId: string;
   startingDate: string;
   endingDate: string;
   status: 'CREATED';
-  siape: string;
-  education: string;
+  enrollment: string;
   institutionalEmail: string;
 }
 
-export interface TeacherResponse {
+export interface StudentResponse {
   userId: string;
-  siape: string;
+  enrollment: string;
   name: string;
   surname: string;
   status: 'CREATED' | 'ACTIVE' | 'SUSPENDED' | 'FINISHED';
-  education:
-    | 'HIGH_SCHOOL'
-    | 'TECHNICAL_CERTIFICATION'
-    | 'ASSOCIATE'
-    | 'BACHELOR_EDUCATION'
-    | 'BACHELOR'
-    | 'POSTGRADUATE'
-    | 'MASTER'
-    | 'DOCTORATE'
-    | 'POST_DOCTORATE';
   institutionalEmail: string;
   createdAt?: string;
 }
 
-export const useCreateTeacher = () => {
+export const useCreateStudent = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: TeacherPayload) => {
-      const response = await customInstance<TeacherResponse>({
-        url: `/professors`,
+    mutationFn: async (data: StudentPayload) => {
+      const response = await customInstance<StudentResponse>({
+        url: `/students`,
         method: 'POST',
         data,
       });
@@ -45,7 +34,7 @@ export const useCreateTeacher = () => {
     },
     onSuccess: () => {
       // Invalidate the query to refetch data
-      queryClient.invalidateQueries({ queryKey: ['teachers'] });
+      queryClient.invalidateQueries({ queryKey: ['students'] });
     },
   });
 };

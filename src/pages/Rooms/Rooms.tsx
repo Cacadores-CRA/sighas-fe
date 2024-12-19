@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { roomsAtom } from '@/atoms/rooms/atomRooms';
+import { useAtom } from 'jotai';
 import {
   Clock,
   DoorClosed,
@@ -68,50 +70,9 @@ interface Room {
   };
 }
 
-const mockRooms: Room[] = [
-  {
-    id: '1',
-    number: '101',
-    name: 'Sala de Aula 101',
-    building: 'Bloco A',
-    floor: '1º Andar',
-    capacity: 40,
-    currentOccupancy: 35,
-    type: 'classroom',
-    status: 'in-use',
-    equipment: ['Projetor', 'Ar Condicionado', 'Quadro Digital'],
-    nextClass: {
-      name: 'Matemática Discreta',
-      time: '14:00',
-    },
-  },
-  {
-    id: '2',
-    number: 'LAB02',
-    name: 'Laboratório de Informática 02',
-    building: 'Bloco B',
-    floor: 'Térreo',
-    capacity: 30,
-    currentOccupancy: 0,
-    type: 'laboratory',
-    status: 'available',
-    equipment: ['Computadores', 'Projetor', 'Ar Condicionado'],
-  },
-  {
-    id: '3',
-    number: 'AUD01',
-    name: 'Auditório Principal',
-    building: 'Bloco Central',
-    floor: 'Térreo',
-    capacity: 200,
-    currentOccupancy: 0,
-    type: 'auditorium',
-    status: 'maintenance',
-    equipment: ['Sistema de Som', 'Projetor', 'Microfones'],
-  },
-];
-
 export function RoomsPage() {
+  const [rooms, setRooms] = useAtom(roomsAtom);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [isNewRoomModalOpen, setIsNewRoomModalOpen] = useState(false);
@@ -128,7 +89,7 @@ export function RoomsPage() {
     hasComputers: false,
   });
 
-  const filteredRooms = mockRooms.filter((room) => {
+  const filteredRooms = rooms.filter((room) => {
     const matchesSearch =
       room.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       room.number.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -181,12 +142,63 @@ export function RoomsPage() {
     setNewRoom((prev) => ({ ...prev, type: value }));
   };
 
-  const handleNewRoomSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleNewRoomSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
-    // Here you would typically send the form data to your backend
-    // and then update the rooms list with the new room
-    console.log('New Room Data:', newRoom);
-    setIsNewRoomModalOpen(false);
+    setIsLoading(true);
+
+    try {
+      // Simulate API request
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      const newRoomData: Room = {
+        id: Date.now().toString(), // temporary ID generation
+        number: newRoom.number,
+        name: newRoom.name,
+        building: newRoom.building,
+        floor: newRoom.floor,
+        capacity: parseInt(newRoom.capacity),
+        currentOccupancy: 0,
+        type: newRoom.type as 'classroom' | 'laboratory' | 'auditorium',
+        status: 'available',
+        equipment: [
+          ...(newRoom.hasProjector ? ['Projetor'] : []),
+          ...(newRoom.hasAirConditioning ? ['Ar Condicionado'] : []),
+          ...(newRoom.hasComputers ? ['Computadores'] : []),
+        ],
+      };
+
+      setRooms([...rooms, newRoomData]);
+      setIsNewRoomModalOpen(false);
+      setNewRoom({
+        number: '',
+        name: '',
+        building: '',
+        floor: '',
+        capacity: '',
+        type: '',
+        description: '',
+        hasProjector: false,
+        hasAirConditioning: false,
+        hasComputers: false,
+      });
+    } catch (error) {
+      console.error('Error adding new room:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Calculate stats from rooms data
+  const stats = {
+    totalRooms: rooms.length,
+    totalCapacity: rooms.reduce((sum, room) => sum + room.capacity, 0),
+    occupancyRate: Math.round(
+      (rooms.reduce((sum, room) => sum + room.currentOccupancy, 0) /
+        rooms.reduce((sum, room) => sum + room.capacity, 0)) *
+        100
+    ),
   };
 
   return (
@@ -200,9 +212,9 @@ export function RoomsPage() {
             <DoorClosed className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>42</div>
+            <div className='text-2xl font-bold'>{stats.totalRooms}</div>
             <p className='text-xs text-muted-foreground'>
-              +3 salas desde o último semestre
+              Total de salas disponíveis
             </p>
           </CardContent>
         </Card>
@@ -214,7 +226,7 @@ export function RoomsPage() {
             <Users className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>1,240</div>
+            <div className='text-2xl font-bold'>{stats.totalCapacity}</div>
             <p className='text-xs text-muted-foreground'>
               Alunos simultaneamente
             </p>
@@ -228,8 +240,8 @@ export function RoomsPage() {
             <Projector className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>78%</div>
-            <Progress value={78} className='mt-2' />
+            <div className='text-2xl font-bold'>{stats.occupancyRate}%</div>
+            <Progress value={stats.occupancyRate} className='mt-2' />
           </CardContent>
         </Card>
       </div>
@@ -429,10 +441,39 @@ export function RoomsPage() {
                     type='button'
                     variant='outline'
                     onClick={() => setIsNewRoomModalOpen(false)}
+                    disabled={isLoading}
                   >
                     Cancelar
                   </Button>
-                  <Button type='submit'>Salvar</Button>
+                  <Button type='submit' disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <svg
+                          className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
+                          xmlns='http://www.w3.org/2000/svg'
+                          fill='none'
+                          viewBox='0 0 24 24'
+                        >
+                          <circle
+                            className='opacity-25'
+                            cx='12'
+                            cy='12'
+                            r='10'
+                            stroke='currentColor'
+                            strokeWidth='4'
+                          />
+                          <path
+                            className='opacity-75'
+                            fill='currentColor'
+                            d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+                          />
+                        </svg>
+                        Salvando...
+                      </>
+                    ) : (
+                      'Salvar'
+                    )}
+                  </Button>
                 </DialogFooter>
               </form>
             </DialogContent>

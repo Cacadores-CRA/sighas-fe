@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useCreateTeacher } from '@/services/teachers/useCreateTeacher';
-import { useTeachersList } from '@/services/teachers/useListTearchers';
+import { useCreateStudent } from '@/services/students/useCreateStudent';
+import { useStudentsList } from '@/services/students/useListStudents';
 import { useUsersList } from '@/services/users/useListUsers';
 import { Search, UserPlus } from 'lucide-react';
 
@@ -16,26 +16,21 @@ import {
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-import { TeacherDetailsModal } from './TeacherDetails';
-
 interface AddTeacherModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-export function AddTeacherModal({ open, onClose }: AddTeacherModalProps) {
+export function AddStudentModal({ open, onClose }: AddTeacherModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
   const { data: users } = useUsersList();
-  const { data: teachers } = useTeachersList();
-  const { mutateAsync } = useCreateTeacher();
-
-  const [showDetails, setShowDetails] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserDataType | null>(null);
+  const { data: students } = useStudentsList();
+  const { mutateAsync } = useCreateStudent();
 
   const availableUsers = users?.filter(
-    (user) => !teachers?.some((teacher) => teacher.userId === user.id)
+    (user) => !students?.some((student) => student.userId === user.id)
   );
 
   const filteredUsers = availableUsers?.filter(
@@ -51,32 +46,17 @@ export function AddTeacherModal({ open, onClose }: AddTeacherModalProps) {
     setTimeout(() => setLoading(false), 500);
   };
 
-  const handleUserSelect = (user: UserDataType) => {
-    setSelectedUser(user);
-    setShowDetails(true);
-  };
-
-  const assignTeacherRole = async (siape: string, education: string) => {
-    if (!selectedUser) return;
-
+  const assignStudentRole = async (user: UserDataType) => {
     await mutateAsync({
-      userId: selectedUser.id,
+      userId: user.id,
       startingDate: new Date().toISOString(),
       endingDate: new Date().toISOString(),
       status: 'CREATED',
-      siape,
-      education: education,
-      institutionalEmail: selectedUser.email,
+      institutionalEmail: user.email,
+      enrollment: '1234567890',
     });
 
-    setShowDetails(false);
-    setSelectedUser(null);
     onClose();
-  };
-
-  const handleDetailsClose = () => {
-    setShowDetails(false);
-    setSelectedUser(null);
   };
 
   return (
@@ -130,7 +110,7 @@ export function AddTeacherModal({ open, onClose }: AddTeacherModalProps) {
                       </p>
                     </div>
                   </div>
-                  <Button size='sm' onClick={() => handleUserSelect(user)}>
+                  <Button size='sm' onClick={() => assignStudentRole(user)}>
                     <UserPlus className='mr-2 h-4 w-4' />
                     Adicionar
                   </Button>
@@ -144,15 +124,6 @@ export function AddTeacherModal({ open, onClose }: AddTeacherModalProps) {
             </div>
           )}
         </ScrollArea>
-
-        {selectedUser && (
-          <TeacherDetailsModal
-            open={showDetails}
-            onClose={handleDetailsClose}
-            onConfirm={assignTeacherRole}
-            user={selectedUser}
-          />
-        )}
       </DialogContent>
     </Dialog>
   );

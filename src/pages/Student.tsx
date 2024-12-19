@@ -1,24 +1,26 @@
-import { useGetTeacher } from '@/services/teachers/useGetTeacher';
+import { useGetStudents } from '@/services/students/useGetStudents';
 import { useNavigate, useParams } from '@tanstack/react-router';
-import { ArrowLeft, GraduationCap, Mail, User, UserCog } from 'lucide-react';
+import { ArrowLeft, Mail, User, UserCog } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import EditTeacherModal from '@/components/modals/EditTeacher';
 
-export const TeacherPage = () => {
+export const StudentPage = () => {
   const navigate = useNavigate();
   const { id } = useParams({ strict: false });
-  const { data: teacher, isLoading } = useGetTeacher(id || '');
+
+  const { data: student, isLoading } = useGetStudents(id || '');
+
+  console.log({ student });
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!teacher) {
-    return <div>Teacher not found</div>;
+  if (!student) {
+    return <div>Student not found</div>;
   }
 
   return (
@@ -32,7 +34,7 @@ export const TeacherPage = () => {
           <ArrowLeft className='mr-2 h-4 w-4' />
           Voltar para lista
         </Button>
-        <EditTeacherModal teacher={teacher} />
+        {/* <EditTeacherModal teacher={teacher} /> */}
       </div>
 
       <Card>
@@ -53,9 +55,9 @@ export const TeacherPage = () => {
                 <User className='h-8 w-8 text-secondary-foreground' />
               </div>
               <div>
-                <h2 className='text-2xl font-bold'>{teacher.name}</h2>
+                <h2 className='text-2xl font-bold'>{student.name}</h2>
                 <p className='text-muted-foreground'>
-                  Professor {teacher.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
+                  Professor {student.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
                 </p>
               </div>
             </div>
@@ -70,22 +72,20 @@ export const TeacherPage = () => {
                     Email Institucional
                   </h3>
                 </div>
-                <p className='text-lg font-medium'>
-                  {teacher.institutionalEmail}
-                </p>
+                <p className='text-lg font-medium'>{student?.email}</p>
               </div>
 
               <div className='space-y-1'>
                 <div className='flex items-center space-x-2'>
                   <UserCog className='h-4 w-4 text-muted-foreground' />
                   <h3 className='text-sm font-medium text-muted-foreground'>
-                    SIAPE
+                    Matrícula
                   </h3>
                 </div>
-                <p className='text-lg font-medium'>{teacher.siape}</p>
+                <p className='text-lg font-medium'>{student.enrollment}</p>
               </div>
 
-              <div className='space-y-1'>
+              {/* <div className='space-y-1'>
                 <div className='flex items-center space-x-2'>
                   <GraduationCap className='h-4 w-4 text-muted-foreground' />
                   <h3 className='text-sm font-medium text-muted-foreground'>
@@ -93,11 +93,11 @@ export const TeacherPage = () => {
                   </h3>
                 </div>
                 <Badge variant='outline' className='text-base'>
-                  {teacher.education === 'GRADUATE' && 'Graduação'}
-                  {teacher.education === 'MASTER' && 'Mestrado'}
-                  {teacher.education === 'DOCTORATE' && 'Doutorado'}
+                  {student. === 'GRADUATE' && 'Graduação'}
+                  {student.education === 'MASTER' && 'Mestrado'}
+                  {student.education === 'DOCTORATE' && 'Doutorado'}
                 </Badge>
-              </div>
+              </div> */}
 
               <div className='space-y-1'>
                 <div className='flex items-center space-x-2'>
@@ -108,10 +108,10 @@ export const TeacherPage = () => {
                 </div>
                 <Badge
                   variant={
-                    teacher.status === 'ACTIVE' ? 'default' : 'secondary'
+                    student.status === 'ACTIVE' ? 'default' : 'secondary'
                   }
                 >
-                  {teacher.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
+                  {student.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
                 </Badge>
               </div>
             </div>

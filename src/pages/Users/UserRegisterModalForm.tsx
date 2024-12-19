@@ -226,23 +226,49 @@ export function UserRegisterModalForm() {
                       name='roles'
                       render={({ field }) => {
                         return (
-                          <FormItem className='flex flex-row items-start space-x-3 space-y-0'>
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes('ADMIN')}
-                                onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([...field.value, 'ADMIN'])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== 'ADMIN'
-                                        )
-                                      );
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className='font-normal'>Admin</FormLabel>
-                          </FormItem>
+                          <div className='flex flex-col gap-2'>
+                            <FormItem className='flex flex-row items-start space-x-3 space-y-0'>
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes('ADMIN')}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([
+                                          ...field.value,
+                                          'ADMIN',
+                                        ])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== 'ADMIN'
+                                          )
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className='font-normal'>
+                                Admin
+                              </FormLabel>
+                            </FormItem>
+                            <FormItem className='flex flex-row items-start space-x-3 space-y-0'>
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes('USER')}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...field.value, 'USER'])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== 'USER'
+                                          )
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className='font-normal'>
+                                User
+                              </FormLabel>
+                            </FormItem>
+                          </div>
                         );
                       }}
                     />

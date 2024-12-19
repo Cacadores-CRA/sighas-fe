@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { TeacherPayload } from '@/services/teachers/useCreateTeacher';
+import { TeacherDataType } from '@/services/teachers/useListTearchers';
+import { useUpdateTeacher } from '@/services/teachers/useUpdateTeacher';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -35,30 +38,54 @@ const formSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
   email: z.string().email('Email inválido'),
   siape: z.string().min(5, 'SIAPE deve ter pelo menos 5 caracteres'),
-  education: z.enum(['HIGH_SCHOOL', 'BACHELOR_EDUCATION', 'DOCTORATE']),
-  status: z.enum(['ACTIVE', 'CREATED']),
+  education: z.enum([
+    'HIGH_SCHOOL',
+    'TECHNICAL_CERTIFICATION',
+    'ASSOCIATE',
+    'BACHELOR_EDUCATION',
+    'BACHELOR',
+    'POSTGRADUATE',
+    'MASTER',
+    'DOCTORATE',
+    'POST_DOCTORATE',
+  ]),
+  status: z.enum(['CREATED', 'ACTIVE', 'SUSPENDED', 'FINISHED']),
 });
 
-export default function EditTeacherModal({ teacher }) {
+export default function EditTeacherModal({
+  teacher,
+}: {
+  teacher: TeacherDataType;
+}) {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const { mutateAsync } = useUpdateTeacher();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: teacher.name,
-      email: teacher.email,
+      email: teacher.institutionalEmail,
       siape: teacher.siape,
-      education: teacher.education,
+      education: teacher.education as z.infer<typeof formSchema>['education'],
       status: teacher.status,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      //   await updateTeacher(teacher.id, values);
+      const payload: TeacherPayload = {
+        userId: teacher.userId,
+        startingDate: teacher.createdAt || new Date().toISOString(),
+        endingDate: new Date().toISOString(),
+        status: 'CREATED',
+        siape: values.siape,
+        education: values.education,
+        institutionalEmail: values.email,
+      };
+
+      await mutateAsync(payload);
       setOpen(false);
-      //   router.refresh();
+      toast.success('Professor atualizado com sucesso');
     } catch (error) {
       console.error(error);
     }
@@ -119,22 +146,34 @@ export default function EditTeacherModal({ teacher }) {
               name='education'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Grau de Educação</FormLabel>
+                  <FormLabel>Nível de Educação</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='Selecione o grau' />
+                        <SelectValue placeholder='Selecione o nível de educação' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value='HIGH_SCHOOL'>Ensino Médio</SelectItem>
-                      <SelectItem value='BACHELOR_EDUCATION'>
-                        Graduação
+                      <SelectItem value='TECHNICAL_CERTIFICATION'>
+                        Certificação Técnica
                       </SelectItem>
+                      <SelectItem value='ASSOCIATE'>Associado</SelectItem>
+                      <SelectItem value='BACHELOR_EDUCATION'>
+                        Bacharelado em Educação
+                      </SelectItem>
+                      <SelectItem value='BACHELOR'>Bacharel</SelectItem>
+                      <SelectItem value='POSTGRADUATE'>
+                        Pós-Graduação
+                      </SelectItem>
+                      <SelectItem value='MASTER'>Mestrado</SelectItem>
                       <SelectItem value='DOCTORATE'>Doutorado</SelectItem>
+                      <SelectItem value='POST_DOCTORATE'>
+                        Pós-Doutorado
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

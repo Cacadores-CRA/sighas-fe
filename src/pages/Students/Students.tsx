@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useStudentsList } from '@/services/students/useListStudents';
+import { Link } from '@tanstack/react-router';
 import { Search, UserPlus } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -13,61 +15,28 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { AddTeacherModal } from '@/components/modals/AddTeacher';
-
-interface Teacher {
-  id: string;
-  name: string;
-  email: string;
-  siape: string;
-  education: string;
-  status: string;
-}
-
-const mockTeachers: Teacher[] = [
-  {
-    id: '1',
-    name: 'Ana Maria',
-    email: 'ana.maria@ifal.edu.br',
-    siape: '123456',
-    education: 'Mestrado',
-    status: 'Ativo',
-  },
-  {
-    id: '2',
-    name: 'Carlos Souza',
-    email: 'carlos.souza@ifal.edu.br',
-    siape: '654321',
-    education: 'Doutorado',
-    status: 'Ativo',
-  },
-  {
-    id: '3',
-    name: 'Bianca Oliveira',
-    email: 'bianca.oliveira@ifal.edu.br',
-    siape: '789123',
-    education: 'Especialização',
-    status: 'Inativo',
-  },
-];
+import { AddStudentModal } from '@/components/modals/AddStudents';
 
 export function StudentsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { data: students } = useStudentsList();
 
-  const filteredTeachers = mockTeachers.filter(
-    (teacher) =>
-      teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      teacher.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      teacher.siape.includes(searchQuery)
+  const filteredStudents = students?.filter(
+    (student) =>
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.institutionalEmail
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      student.enrollment.includes(searchQuery)
   );
 
   return (
     <Card className='w-full'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-7'>
-        <CardTitle className='text-2xl font-bold'>Alunos</CardTitle>
+        <CardTitle className='text-2xl font-bold'>Todos os alunos</CardTitle>
         <Button onClick={() => setIsModalOpen(true)}>
-          <UserPlus className='mr-2 h-4 w-4' /> Adicionar Professor
+          <UserPlus className='mr-2 h-4 w-4' /> Adicionar Aluno
         </Button>
       </CardHeader>
       <CardContent>
@@ -86,34 +55,47 @@ export function StudentsPage() {
               <TableRow>
                 <TableHead>Nome</TableHead>
                 <TableHead>Email Institucional</TableHead>
-                <TableHead>SIAPE</TableHead>
-                <TableHead>Grau de Educação</TableHead>
+                <TableHead>Matricula</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredTeachers.map((teacher) => (
-                <TableRow key={teacher.id}>
-                  <TableCell className='font-medium'>{teacher.name}</TableCell>
-                  <TableCell>{teacher.email}</TableCell>
-                  <TableCell>{teacher.siape}</TableCell>
-                  <TableCell>{teacher.education}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        teacher.status === 'Ativo' ? 'default' : 'secondary'
-                      }
-                    >
-                      {teacher.status}
-                    </Badge>
+              {filteredStudents?.length ? (
+                filteredStudents.map((student) => (
+                  <TableRow key={student.userId}>
+                    <TableCell className='font-medium'>
+                      <Link to={`/students/${student.enrollment}`}>
+                        {student.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{student.institutionalEmail}</TableCell>
+                    <TableCell>{student.enrollment}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          student.status === 'ACTIVE' ? 'default' : 'secondary'
+                        }
+                      >
+                        {student.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className='text-center text-muted-foreground'
+                  >
+                    Nenhum aluno encontrado
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>
       </CardContent>
-      <AddTeacherModal
+      <AddStudentModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
