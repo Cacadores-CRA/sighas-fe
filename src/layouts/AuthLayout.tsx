@@ -1,15 +1,12 @@
+import { Navigate, Outlet } from '@tanstack/react-router';
+
 import { useAuthenticated } from '@/hooks/useAuthenticated';
-import { useNavigate } from '@tanstack/react-router';
-import { Outlet } from '@tanstack/react-router';
 
 export const AuthLayout = () => {
   const { isValid } = useAuthenticated();
-  const navigate = useNavigate();
 
   if (isValid) {
-    navigate({
-      to: '/home',
-    });
+    return <Navigate to='/home' />;
   }
 
   return (

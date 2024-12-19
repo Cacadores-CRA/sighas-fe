@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import {
   BookOpen,
   GraduationCap,
@@ -5,7 +6,6 @@ import {
   LayoutDashboard,
   Library,
   Presentation,
-
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -24,8 +24,6 @@ import {
 import logo from '@/assets/logo.svg';
 
 import { NavUser } from './NavUser';
-
-import { Link } from '@tanstack/react-router';
 
 // Menu items.
 const items = [
@@ -68,7 +66,7 @@ const items = [
 
 export function AppSidebar() {
   const pathname = window.location.pathname;
-  console.log(pathname);
+
   return (
     <Sidebar>
       <SidebarHeader className='pt-8 px-6 '>
@@ -99,9 +97,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser
-          user={{ name: 'John Doe', email: 'john@doe.com', avatar: '' }}
-        />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

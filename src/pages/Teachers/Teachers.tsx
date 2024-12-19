@@ -1,5 +1,3 @@
-// import { Link } from '@tanstack/react-router';
-
 import { Monitor, UserCheck, UsersRound } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +11,6 @@ export const TeachersPage = () => {
   return (
     <div className='w-full'>
       <div className='flex flex-col gap-16 h-full'>
-        <h1 className='text-2xl font-medium'>Olá, Evano 👋</h1>
         <Card className='w-full'>
           <CardContent className='p-0'>
             <div className='flex p-8 items-center justify-between'>

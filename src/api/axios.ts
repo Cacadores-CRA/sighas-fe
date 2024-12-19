@@ -1,6 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
-// Create axios instance with default config
 const api = axios.create({
   baseURL: 'http://localhost:8080/v1',
   headers: {
@@ -8,32 +7,32 @@ const api = axios.create({
   },
 });
 
-// Request interceptor
+// Request interceptor to update token dynamically
 api.interceptors.request.use(
   (config) => {
-    // Get token from localStorage or your auth state management
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const currentToken = localStorage.getItem('token');
+    if (currentToken) {
+      config.headers.Authorization = `Bearer ${currentToken}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle common errors (401, 403, etc.)
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      // e.g., redirect to login page
+      // localStorage.removeItem('token');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }
 );
+export const customInstance = async <T>(config: AxiosRequestConfig) => {
+  const { data } = await api(config);
+  return data as T;
+};
 
+export type ErrorType<Error> = AxiosError<Error>;
 export default api;

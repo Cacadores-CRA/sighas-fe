@@ -23,11 +23,10 @@ export const useAuth = () => {
   return useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      // Handle successful login
-      // For example, store the token in localStorage
-      console.log('success');
-      toast.success('Login successful');
+      // Store token and expiration separately
+      localStorage.setItem('token', data.accessToken);
       localStorage.setItem('auth', JSON.stringify(data));
+      toast.success('Login successful');
     },
     onError: (error) => {
       // Handle login error

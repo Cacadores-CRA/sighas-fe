@@ -1,17 +1,15 @@
 import { useState } from 'react';
+import { customInstance } from '@/api/axiosInstance';
 import { UserFormData, userSchema } from '@/schema/UserSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { format } from 'date-fns';
-import { CalendarIcon, PlusCircle } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import { AxiosErrorData } from '@/types/ErrorTypes';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
@@ -31,14 +29,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { SubmitButton } from '@/components/SubmitButton';
-
-import { customInstance } from '../../../axiosInstance';
 
 export function UserRegisterModalForm() {
   const queryClient = useQueryClient();
@@ -47,6 +38,7 @@ export function UserRegisterModalForm() {
 
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
+    mode: 'onChange',
     defaultValues: {
       cpf: '',
       name: '',
@@ -62,7 +54,7 @@ export function UserRegisterModalForm() {
   const addUser = useMutation({
     mutationFn: (newUser: UserFormData) => {
       return customInstance({
-        url: `/v1/users`,
+        url: `/users`,
         method: 'POST',
         // params,
         data: newUser,
@@ -86,7 +78,14 @@ export function UserRegisterModalForm() {
   });
 
   const onSubmit = (data: UserFormData) => {
-    addUser.mutate(data);
+    // Format birthdate from DD/MM/YYYY to YYYY-MM-DD
+    const [day, month, year] = data.birthdate.split('/');
+    const formattedData = {
+      ...data,
+      birthdate: `${year}-${month}-${day}`,
+    };
+
+    addUser.mutate(formattedData);
     setIsOpen(false);
   };
 
@@ -99,7 +98,7 @@ export function UserRegisterModalForm() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>User Registration</DialogTitle>
+          <DialogTitle>Cadastro de usuário</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
@@ -112,7 +111,11 @@ export function UserRegisterModalForm() {
                     <FormItem>
                       <FormLabel>CPF</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          mask='999.999.999-99'
+                          placeholder='000.000.000-00'
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -152,43 +155,13 @@ export function UserRegisterModalForm() {
                   render={({ field }) => (
                     <FormItem className='flex flex-col mt-[10px]'>
                       <FormLabel>Data de nascimento</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={'outline'}
-                              className={cn(
-                                'w-full pl-3 text-left font-normal',
-                                !field.value && 'text-muted-foreground'
-                              )}
-                            >
-                              {field.value ? (
-                                format(new Date(field.value), 'PPP')
-                              ) : (
-                                <span>Selecione uma data</span>
-                              )}
-                              <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className='w-auto p-0' align='start'>
-                          <Calendar
-                            mode='single'
-                            selected={
-                              field.value ? new Date(field.value) : undefined
-                            }
-                            onSelect={(date) =>
-                              field.onChange(
-                                date ? format(date, 'yyyy-MM-dd') : ''
-                              )
-                            }
-                            disabled={(date) =>
-                              date > new Date() || date < new Date('1900-01-01')
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <FormControl>
+                        <Input
+                          mask='99/99/9999'
+                          placeholder='DD/MM/AAAA'
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}

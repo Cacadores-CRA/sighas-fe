@@ -35,9 +35,7 @@ export const userSchema = z.object({
     .string()
     .min(2, { message: 'O sobrenome deve conter no mínimo 2 caracteres.' })
     .max(50, { message: 'O sobrenome deve conter no máximo 50 caracteres.' }),
-  birthdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
-    message: 'A data de nascimento deve estar no formato YYYY-MM-DD.',
-  }),
+  birthdate: z.string(),
   email: z.string().email({ message: 'O e-mail deve ser válido.' }),
   username: z
     .string()

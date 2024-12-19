@@ -1,12 +1,10 @@
 import { lazy, Suspense } from 'react';
-import { createRootRouteWithContext, Outlet, useNavigate } from '@tanstack/react-router';
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 
 import { Loading } from '@/components/Loading';
-import { useAuthenticated } from '@/hooks/useAuthenticated';
-
 
 const TanStackRouterDevtools = import.meta.env.PROD
-  ? () => null // Render nothing in production
+  ? () => null
   : lazy(() =>
       import('@tanstack/router-devtools').then((res) => ({
         default: res.TanStackRouterDevtools,
@@ -14,49 +12,39 @@ const TanStackRouterDevtools = import.meta.env.PROD
     );
 
 const TailwindIndicator = import.meta.env.PROD
-  ? () => null // Render nothing in production
+  ? () => null
   : lazy(() =>
       import('@/components/TailwindIndicator').then((res) => ({
         default: res.TailwindIndicator,
       }))
     );
 
-// Defining the type for the router context
+interface MyRouterContext {
+  isAuthenticated: boolean;
+}
 
-const Root = () => {
-  const { isValid } = useAuthenticated();
-  const navigate = useNavigate();
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+  component: Root,
+  beforeLoad: () => {
+    const authData = localStorage.getItem('auth');
+    const isValid = authData ? true : false;
 
-  if (isValid) {
-    navigate({
-      to: '/home',
-    });
+    return {
+      isAuthenticated: isValid,
+    };
+  },
+});
 
-  }
-
+function Root() {
   return (
     <>
       <Suspense fallback={<Loading />}>
         <Outlet />
       </Suspense>
-      <Suspense
-        fallback={
-          <div className='bg-gray-800 fixed bottom-1 left-20 z-50 flex size-6 animate-pulse items-center justify-start rounded-full p-3 font-mono text-sm text-white'>
-            <div>TanStackRouter / tailwind Devtools</div>
-          </div>
-        }
-      >
+      <Suspense fallback={null}>
         <TanStackRouterDevtools />
         <TailwindIndicator />
       </Suspense>
     </>
   );
-};
-
-interface MyRouterContext {
-  isAuthenticated: boolean | undefined;
 }
-// Creating the route with context
-export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: Root,
-});

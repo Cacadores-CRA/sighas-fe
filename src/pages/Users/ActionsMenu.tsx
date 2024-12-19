@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { customInstance } from '../../../axiosInstance';
+import { customInstance } from '../../api/axiosInstance';
 
 export function ActionsMenu({ user }: { user: UserDataType }) {
   const queryClient = useQueryClient();
@@ -23,7 +23,7 @@ export function ActionsMenu({ user }: { user: UserDataType }) {
   const deleteUser = useMutation({
     mutationFn: (id: string) => {
       return customInstance({
-        url: `/v1/users/${id}`,
+        url: `/users/${id}`,
         method: 'DELETE',
         // params,
       });

@@ -1,22 +1,19 @@
-
-
 interface AuthData {
   token: string;
   expiresIn: string;
-  user: {
-    username: string;
-    // add other user fields as needed
-  };
+  userEmail: string;
+  userName: string;
+  userSurname: string;
 }
 
 export const useAuthenticated = (): {
   isValid: boolean;
-  userData: AuthData | null;
+  data: AuthData | null;
 } => {
   try {
     const authData = localStorage.getItem('auth');
     if (!authData) {
-      return { isValid: false, userData: null };
+      return { isValid: false, data: null };
     }
 
     const parsed = JSON.parse(authData) as AuthData;
@@ -26,18 +23,19 @@ export const useAuthenticated = (): {
     if (now > expirationDate) {
       // Token has expired, clear storage
       localStorage.removeItem('auth');
-      return { isValid: false, userData: null };
+      return { isValid: false, data: null };
     }
 
-    return { isValid: true, userData: parsed };
+    return { isValid: true, data: parsed };
   } catch (err) {
     console.error(err);
     localStorage.removeItem('auth');
-    return { isValid: false, userData: null };
+    return { isValid: false, data: null };
   }
 };
 
 export const logout = () => {
   localStorage.removeItem('auth');
+  localStorage.removeItem('token');
   window.location.href = '/login';
 };

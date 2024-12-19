@@ -86,6 +86,9 @@ dependencies:
   react-hot-toast:
     specifier: ^2.4.1
     version: 2.4.1(csstype@3.1.3)(react-dom@18.3.1)(react@18.3.1)
+  react-input-mask:
+    specifier: ^2.0.4
+    version: 2.0.4(react-dom@18.3.1)(react@18.3.1)
   sonner:
     specifier: ^1.7.1
     version: 1.7.1(react-dom@18.3.1)(react@18.3.1)
@@ -142,6 +145,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.3.0
     version: 18.3.2
+  '@types/react-input-mask':
+    specifier: ^3.0.6
+    version: 3.0.6
   '@types/uuid':
     specifier: ^10.0.0
     version: 10.0.0
@@ -2827,6 +2833,12 @@ packages:
     resolution: {integrity: sha512-Fqp+rcvem9wEnGr3RY8dYNvSQ8PoLqjZ9HLgaPUOjJJD120uDyOxOjc/39M4Kddp9JQCxpGQbnhVQF0C0ncYVg==}
     dependencies:
       '@types/react': 18.3.14
+
+  /@types/react-input-mask@3.0.6:
+    resolution: {integrity: sha512-+5I18WKyG3eWIj7TVPWfK1VitI9mPpS9y6jE/BfmTCe+iL27NfBw/yzKRvCFp1DRBvlvvcsiZf05bub0YC1k8A==}
+    dependencies:
+      '@types/react': 18.3.14
+    dev: true
 
   /@types/react@18.3.14:
     resolution: {integrity: sha512-NzahNKvjNhVjuPBQ+2G7WlxstQ+47kXZNHlUvFakDViuIEfGY926GqhMueQFZ7woG+sPiQKlF36XfrIUVSUfFg==}
@@ -5529,6 +5541,18 @@ packages:
       - csstype
     dev: false
 
+  /react-input-mask@2.0.4(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-1hwzMr/aO9tXfiroiVCx5EtKohKwLk/NT8QlJXHQ4N+yJJFyUuMT+zfTpLBwX/lK3PkuMlievIffncpMZ3HGRQ==}
+    peerDependencies:
+      react: '>=0.14.0'
+      react-dom: '>=0.14.0'
+    dependencies:
+      invariant: 2.2.4
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      warning: 4.0.3
+    dev: false
+
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: true
@@ -6376,6 +6400,12 @@ packages:
       '@mapbox/vector-tile': 1.3.1
       pbf: 3.3.0
     dev: true
+
+  /warning@4.0.3:
+    resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
 
   /webpack-virtual-modules@0.6.2:
     resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
