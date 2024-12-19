@@ -1,11 +1,9 @@
-import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 import { lazy, Suspense } from 'react';
+import { createRootRouteWithContext, Outlet, useNavigate } from '@tanstack/react-router';
 
-// import { Loading } from '@/components/Loading';
-// import {
-//   AuthErrorBoundary,
-//   GeneralErrorBoundary,
-// } from '@/components/error-boundary';
+import { Loading } from '@/components/Loading';
+import { useAuth } from '@/hooks/useAuth';
+
 
 const TanStackRouterDevtools = import.meta.env.PROD
   ? () => null // Render nothing in production
@@ -26,13 +24,19 @@ const TailwindIndicator = import.meta.env.PROD
 // Defining the type for the router context
 
 const Root = () => {
+  const { isValid } = useAuth();
+  const navigate = useNavigate();
+
+  if (isValid) {
+    navigate({
+      to: '/home',
+    });
+
+  }
+
   return (
     <>
-      {/* <GeneralErrorBoundary>
-        <AuthErrorBoundary> */}
-      <Suspense
-      // fallback={<Loading />}
-      >
+      <Suspense fallback={<Loading />}>
         <Outlet />
       </Suspense>
       <Suspense
@@ -45,8 +49,6 @@ const Root = () => {
         <TanStackRouterDevtools />
         <TailwindIndicator />
       </Suspense>
-      {/* </AuthErrorBoundary>
-      </GeneralErrorBoundary> */}
     </>
   );
 };

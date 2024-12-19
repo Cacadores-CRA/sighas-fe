@@ -16,6 +16,7 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as DashboardUsersImport } from './routes/_dashboard/users'
 import { Route as DashboardTeachersImport } from './routes/_dashboard/teachers'
+import { Route as DashboardHomeImport } from './routes/_dashboard/home'
 import { Route as AuthRegisterImport } from './routes/_auth/register'
 import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as AuthForgetPasswordImport } from './routes/_auth/forget-password'
@@ -50,6 +51,12 @@ const DashboardTeachersRoute = DashboardTeachersImport.update({
   getParentRoute: () => DashboardRoute,
 } as any)
 
+const DashboardHomeRoute = DashboardHomeImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
 const AuthRegisterRoute = AuthRegisterImport.update({
   id: '/register',
   path: '/register',
@@ -72,13 +79,6 @@ const AuthForgetPasswordRoute = AuthForgetPasswordImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
     '/_auth': {
       id: '/_auth'
       path: ''
@@ -114,6 +114,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterImport
       parentRoute: typeof AuthImport
     }
+    '/_dashboard/home': {
+      id: '/_dashboard/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof DashboardHomeImport
+      parentRoute: typeof DashboardImport
+    }
     '/_dashboard/teachers': {
       id: '/_dashboard/teachers'
       path: '/teachers'
@@ -148,11 +155,13 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardHomeRoute: typeof DashboardHomeRoute
   DashboardTeachersRoute: typeof DashboardTeachersRoute
   DashboardUsersRoute: typeof DashboardUsersRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardHomeRoute: DashboardHomeRoute,
   DashboardTeachersRoute: DashboardTeachersRoute,
   DashboardUsersRoute: DashboardUsersRoute,
 }
@@ -162,33 +171,33 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 )
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '': typeof DashboardRouteWithChildren
   '/forget-password': typeof AuthForgetPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
+  '/home': typeof DashboardHomeRoute
   '/teachers': typeof DashboardTeachersRoute
   '/users': typeof DashboardUsersRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '': typeof DashboardRouteWithChildren
   '/forget-password': typeof AuthForgetPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
+  '/home': typeof DashboardHomeRoute
   '/teachers': typeof DashboardTeachersRoute
   '/users': typeof DashboardUsersRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/_dashboard': typeof DashboardRouteWithChildren
   '/_auth/forget-password': typeof AuthForgetPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
+  '/_dashboard/home': typeof DashboardHomeRoute
   '/_dashboard/teachers': typeof DashboardTeachersRoute
   '/_dashboard/users': typeof DashboardUsersRoute
 }
@@ -196,11 +205,11 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | ''
     | '/forget-password'
     | '/login'
     | '/register'
+    | '/home'
     | '/teachers'
     | '/users'
   fileRoutesByTo: FileRoutesByTo
@@ -212,27 +221,26 @@ export interface FileRouteTypes {
     | '/register'
     | '/teachers'
     | '/users'
+  to: '' | '/forget-password' | '/login' | '/register' | '/home' | '/teachers'
   id:
     | '__root__'
-    | '/'
     | '/_auth'
     | '/_dashboard'
     | '/_auth/forget-password'
     | '/_auth/login'
     | '/_auth/register'
+    | '/_dashboard/home'
     | '/_dashboard/teachers'
     | '/_dashboard/users'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
 }
@@ -247,13 +255,9 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
         "/_auth",
         "/_dashboard"
       ]
-    },
-    "/": {
-      "filePath": "index.tsx"
     },
     "/_auth": {
       "filePath": "_auth.tsx",
@@ -268,6 +272,8 @@ export const routeTree = rootRoute
       "children": [
         "/_dashboard/teachers",
         "/_dashboard/users"
+        "/_dashboard/home",
+        "/_dashboard/teachers"
       ]
     },
     "/_auth/forget-password": {
@@ -281,6 +287,10 @@ export const routeTree = rootRoute
     "/_auth/register": {
       "filePath": "_auth/register.tsx",
       "parent": "/_auth"
+    },
+    "/_dashboard/home": {
+      "filePath": "_dashboard/home.tsx",
+      "parent": "/_dashboard"
     },
     "/_dashboard/teachers": {
       "filePath": "_dashboard/teachers.tsx",

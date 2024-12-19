@@ -1,6 +1,17 @@
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from '@tanstack/react-router';
 import { Outlet } from '@tanstack/react-router';
 
 export const AuthLayout = () => {
+  const { isValid } = useAuth();
+  const navigate = useNavigate();
+
+  if (isValid) {
+    navigate({
+      to: '/home',
+    });
+  }
+
   return (
     <div className='flex h-screen w-screen bg-[#D7DDE5] p-4 shadow-md'>
       <div className='flex-1 w-full max-w-96 mx-auto my-auto bg-white rounded-xl shadow-md max-h-[500px] overflow-hidden p-8'>

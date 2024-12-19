@@ -1,31 +1,66 @@
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormMessage,
-  FormField,
-  FormItem,
-  FormControl,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { formLoginSchema } from '@/schema/Login';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
+import axios from 'axios';
 // import { Link } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+// Add this interface for the response type
+interface AuthResponse {
+  token: string;
+  expiresIn: string;
+  user: {
+    username: string;
+    // add other user fields as needed
+  };
+}
+
 export const LoginPage = () => {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formLoginSchema>>({
     resolver: zodResolver(formLoginSchema),
     defaultValues: {
-      email: '',
+      username: '',
       password: '',
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formLoginSchema>) => {
-    console.log(data);
+  
+
+  const onSubmit = async (data: z.infer<typeof formLoginSchema>) => {
+    try {
+      const response = await axios.post<AuthResponse>(
+        'http://localhost:8080/v1/auth',
+        data
+      );
+
+      // Save auth data to localStorage
+      const authData = {
+        token: response.data.token,
+        expiresIn: response.data.expiresIn,
+        user: response.data.user,
+      };
+
+      localStorage.setItem('auth', JSON.stringify(authData));
+
+      // Navigate to dashboard after successful login
+      navigate({ to: '/home' });
+    } catch (error) {
+      console.error('Login failed:', error);
+      // Handle login error here
+    }
   };
 
   return (
@@ -49,14 +84,14 @@ export const LoginPage = () => {
         >
           <FormField
             control={form.control}
-            name='email'
+            name='username'
             render={({ field }) => (
               <FormItem>
-                <Label>Email</Label>
+                <Label>Usuário</Label>
                 <FormControl>
                   <Input
-                    placeholder='Digita seu email'
-                    type='email'
+                    placeholder='Digita seu usuário'
+                    type='text'
                     required
                     {...field}
                   />

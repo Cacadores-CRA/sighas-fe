@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider } from '@tanstack/react-router';
 import { Toaster } from 'react-hot-toast';
 
+
 const AuthenticatedApp = () => {
   return <RouterProvider router={router} />;
 };

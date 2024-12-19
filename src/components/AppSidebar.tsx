@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   Library,
   Presentation,
+
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -23,6 +24,8 @@ import {
 import logo from '@/assets/logo.svg';
 
 import { NavUser } from './NavUser';
+
+import { Link } from '@tanstack/react-router';
 
 // Menu items.
 const items = [
@@ -84,10 +87,10 @@ export function AppSidebar() {
                       pathname === item.url && 'bg-sidebar-accent *:text-white'
                     )}
                   >
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon className={cn('size-6')} />
                       <span className='text-base  '>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
