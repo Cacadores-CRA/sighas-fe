@@ -1,3 +1,68 @@
+# Como rodar o projeto - Projeto React com Vite e pnpm
+
+Uma aplicação React configurada com Vite para um desenvolvimento rápido e eficiente, utilizando o pnpm como gerenciador de pacotes.
+
+## Pré-requisitos
+
+Certifique-se de ter as seguintes ferramentas instaladas em sua máquina:
+
+- [Node.js](https://nodejs.org/) (versão 14 ou superior)
+- [pnpm](https://pnpm.io/) (versão 6 ou superior)
+
+## Instalação
+
+Siga os passos abaixo para configurar o ambiente de desenvolvimento:
+
+1. **Clone este repositório**:
+
+   ```bash
+   git clone https://github.com/Cacadores-CRA/sighas-fe.git
+   ```
+
+2. **Acesse o diretório do projeto**:
+
+   ```bash
+   cd sighas-fe
+   ```
+
+3. **Instale as dependências**:
+
+   Utilize o pnpm para instalar as dependências do projeto:
+
+   ```bash
+   pnpm install
+   ```
+
+## Executando o Projeto
+
+Após a instalação das dependências, você pode iniciar o servidor de desenvolvimento:
+
+```bash
+pnpm dev
+```
+
+O projeto estará acessível no endereço `http://localhost:3000`.
+
+## Construindo para Produção
+
+Para gerar uma versão otimizada do projeto para produção:
+
+```bash
+pnpm build
+```
+
+Os arquivos de saída serão gerados no diretório `dist`.
+
+## Executando a Versão de Produção
+
+Após construir o projeto, você pode usar o seguinte comando para executar a versão de produção:
+
+```bash
+pnpm preview
+```
+
+O projeto estará acessível no endereço indicado no terminal.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -22,7 +87,7 @@ export default tseslint.config({
       tsconfigRootDir: import.meta.dirname,
     },
   },
-})
+});
 ```
 
 - Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
@@ -31,7 +96,7 @@ export default tseslint.config({
 
 ```js
 // eslint.config.js
-import react from 'eslint-plugin-react'
+import react from 'eslint-plugin-react';
 
 export default tseslint.config({
   // Set the react version
@@ -46,5 +111,5 @@ export default tseslint.config({
     ...react.configs.recommended.rules,
     ...react.configs['jsx-runtime'].rules,
   },
-})
+});
 ```
