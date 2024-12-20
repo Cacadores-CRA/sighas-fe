@@ -9,9 +9,10 @@ export interface UserDataType {
   name: string;
   surname: string;
   birthdate: string;
+  education_level: string;
   email: string;
-  roles: string[];
-  createdAt: string;
+  roles?: string[];
+  createdAt?: string;
 }
 
 function userList(/*params: UsersListParams*/) {

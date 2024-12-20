@@ -1,10 +1,10 @@
+import { UserDataType } from '@/services/users/useListUsers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { MoreHorizontal, Trash } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { AxiosErrorData } from '@/types/ErrorTypes';
-import { UserDataType } from '@/types/Users/UserDataType';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,

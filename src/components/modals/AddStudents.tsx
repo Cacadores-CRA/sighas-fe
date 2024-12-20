@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useCreateStudent } from '@/services/students/useCreateStudent';
 import { useStudentsList } from '@/services/students/useListStudents';
-import { useUsersList } from '@/services/users/useListUsers';
+import { UserDataType, useUsersList } from '@/services/users/useListUsers';
 import { Search, UserPlus } from 'lucide-react';
 
-import { UserDataType } from '@/types/Users/UserDataType';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {

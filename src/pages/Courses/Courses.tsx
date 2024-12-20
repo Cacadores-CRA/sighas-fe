@@ -164,8 +164,19 @@ export const CoursesPage = () => {
           <h2 className='text-2xl font-bold text-slate-900'>Todos os cursos</h2>
           <Dialog open={isAddCourseOpen} onOpenChange={setIsAddCourseOpen}>
             <DialogTrigger asChild>
-              <Button className='bg-blue-500 hover:bg-blue-600'>
-                <Plus className='mr-2 h-4 w-4' /> Adicionar Curso
+              <Button
+                className='bg-blue-500 hover:bg-blue-600'
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span className='animate-spin mr-2'>⏳</span> Adicionando...
+                  </>
+                ) : (
+                  <>
+                    <Plus className='mr-2 h-4 w-4' /> Adicionar Curso
+                  </>
+                )}
               </Button>
             </DialogTrigger>
             <DialogContent className='sm:max-w-[425px]'>
@@ -257,7 +268,9 @@ export const CoursesPage = () => {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type='submit'>Adicionar Curso</Button>
+                  <Button type='submit' disabled={isLoading}>
+                    {isLoading ? 'Adicionando...' : 'Adicionar Curso'}
+                  </Button>
                 </DialogFooter>
               </form>
             </DialogContent>

@@ -1,7 +1,6 @@
 import { customInstance } from '@/api/axiosInstance';
+import { UserDataType } from '@/services/users/useListUsers';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-
-import { UserDataType } from '@/types/Users/UserDataType.tsx';
 
 // type UsersListParams = {
 //   id: number;

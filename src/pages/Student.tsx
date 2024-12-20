@@ -72,7 +72,9 @@ export const StudentPage = () => {
                     Email Institucional
                   </h3>
                 </div>
-                <p className='text-lg font-medium'>{student?.email}</p>
+                <p className='text-lg font-medium'>
+                  {student?.institutionalEmail}
+                </p>
               </div>
 
               <div className='space-y-1'>

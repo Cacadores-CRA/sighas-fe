@@ -1,8 +1,8 @@
+import { UserDataType } from '@/services/users/useListUsers';
 import { ColumnDef } from '@tanstack/react-table';
 import { format, parseISO } from 'date-fns';
 import { ChevronsUpDown } from 'lucide-react';
 
-import { UserDataType } from '@/types/Users/UserDataType';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
