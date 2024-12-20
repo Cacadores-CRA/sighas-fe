@@ -2,8 +2,10 @@ import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
 
 const getToken = () => localStorage.getItem('token');
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export const AXIOS_INSTANCE = axios.create({
-  baseURL: 'http://localhost:8080/v1',
+  baseURL: apiUrl,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

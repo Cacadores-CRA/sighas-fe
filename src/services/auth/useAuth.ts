@@ -1,4 +1,4 @@
-import api from '@/api/axios';
+import { customInstance } from '@/api/axiosInstance';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -15,7 +15,11 @@ interface LoginResponse {
 const loginUser = async (
   credentials: LoginCredentials
 ): Promise<LoginResponse> => {
-  const { data } = await api.post('/auth', credentials);
+  const data = await customInstance<LoginResponse>({
+    method: 'POST',
+    url: '/auth',
+    data: credentials,
+  });
   return data;
 };
 
