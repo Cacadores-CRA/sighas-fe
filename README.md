@@ -1,3 +1,6 @@
+# O projeto está hospedado no [Netlify](https://sighas.netlify.app)
+Você pode ter acesso ao projeto hosteado [aqui](https://sighas.netlify.app)
+
 # Como rodar o projeto - Projeto React com Vite e pnpm
 
 Uma aplicação React configurada com Vite para um desenvolvimento rápido e eficiente, utilizando o pnpm como gerenciador de pacotes.
