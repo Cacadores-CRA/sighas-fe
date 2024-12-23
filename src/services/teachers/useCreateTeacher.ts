@@ -1,3 +1,4 @@
+import { TeacherStatusType } from '@/@types/teachers';
 import { customInstance } from '@/api/axiosInstance';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -5,7 +6,7 @@ export interface TeacherPayload {
   userId: string;
   startingDate: string;
   endingDate: string;
-  status: 'CREATED';
+  status: TeacherStatusType;
   siape: string;
   education: string;
   institutionalEmail: string;
@@ -13,6 +14,8 @@ export interface TeacherPayload {
 
 export interface EditTeacherPayload extends TeacherPayload {
   affiliationId: string;
+  name: string;
+  surname?: string;
 }
 
 export interface TeacherResponse {

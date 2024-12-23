@@ -1,16 +1,7 @@
 import { customInstance } from '@/api/axiosInstance';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-interface TeacherPayload {
-  userId: string;
-  startingDate: string;
-  endingDate: string;
-  status: 'CREATED';
-  siape: string;
-  education: string;
-  institutionalEmail: string;
-  affiliationId: string;
-}
+import { EditTeacherPayload } from './useCreateTeacher';
 
 interface TeacherResponse {
   userId: string;
@@ -36,7 +27,7 @@ export const useUpdateTeacher = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: TeacherPayload) => {
+    mutationFn: async (data: EditTeacherPayload) => {
       const response = await customInstance<TeacherResponse>({
         url: `/professors/${data.affiliationId}`,
         method: 'PUT',
