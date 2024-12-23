@@ -5,3 +5,9 @@ export type SubjectResponse = {
   shortTitle: string;
   createdAt: string;
 };
+
+export type SubjectPayload = {
+  code: string;
+  title: string;
+  shortTitle: string;
+};
