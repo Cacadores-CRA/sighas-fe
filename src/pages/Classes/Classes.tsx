@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useClassesList } from '@/services/classes/useListClasses';
+import { useNavigate } from '@tanstack/react-router';
 import {
   BookOpen,
   Calendar,
@@ -72,6 +73,7 @@ const turmas: Turma[] = [
 ];
 
 export const ClassesPage = () => {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -178,7 +180,13 @@ export const ClassesPage = () => {
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {filteredTurmas?.map((turma) => (
-            <Card key={turma.id} className='overflow-hidden'>
+            <Card
+              key={turma.id}
+              className='overflow-hidden cursor-pointer hover:shadow-lg transition-all'
+              onClick={() =>
+                navigate({ to: '/classes/$id', params: { id: turma.id } })
+              }
+            >
               <div className='p-6'>
                 <div className='flex items-start justify-between mb-4'>
                   <div>
