@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { customInstance } from '@/api/axiosInstance';
 import { UserFormData, userSchema } from '@/schema/UserSchema';
+import { UserDataType } from '@/services/users/useListUsers';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { PlusCircle } from 'lucide-react';
+import { Pencil, PlusCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -31,7 +32,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/SubmitButton';
 
-export function UserRegisterModalForm() {
+interface UserFormModalProps {
+  user?: UserDataType & { id?: string };
+  isEditMode?: boolean;
+}
+
+export function UserRegisterModalForm({
+  user,
+  isEditMode = false,
+}: UserFormModalProps) {
   const queryClient = useQueryClient();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -51,28 +60,48 @@ export function UserRegisterModalForm() {
     },
   });
 
-  const addUser = useMutation({
-    mutationFn: (newUser: UserFormData) => {
+  useEffect(() => {
+    if (user && isEditMode) {
+      // Format birthdate from YYYY-MM-DD to DD/MM/YYYY
+      const [year, month, day] = user.birthdate.split('-');
+      const formattedBirthdate = `${day}/${month}/${year}`;
+
+      console.log('user: ');
+      console.log(user);
+
+      form.reset({
+        ...user,
+        birthdate: formattedBirthdate,
+        password: '', // Clear password field for security
+      });
+
+      form.trigger();
+    }
+  }, [user, isEditMode, form]);
+
+  const mutation = useMutation({
+    mutationFn: (userData: UserFormData) => {
+      const url = isEditMode ? `/users/${user?.id}` : '/users';
+      const method = isEditMode ? 'PUT' : 'POST';
       return customInstance({
-        url: `/users`,
-        method: 'POST',
-        // params,
-        data: newUser,
+        url,
+        method,
+        data: userData,
       });
     },
     onSuccess: () => {
-      // ✅ refetch the users list
-      toast.success('Usuário registrado com sucesso!.');
-      queryClient.invalidateQueries({
-        queryKey: ['users'],
-      });
+      toast.success(
+        isEditMode
+          ? 'Usuário atualizado com sucesso!'
+          : 'Usuário registrado com sucesso!'
+      );
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setIsOpen(false);
     },
     onError: (error: AxiosError<AxiosErrorData>) => {
-      console.log('error:');
-      console.log(error);
-
-      error.response?.data.errors?.map((error) => {
-        toast.error(error.defaultMessage);
+      console.error('Error:', error);
+      error.response?.data.errors?.forEach((err) => {
+        toast.error(err.defaultMessage);
       });
     },
   });
@@ -85,16 +114,21 @@ export function UserRegisterModalForm() {
       birthdate: `${year}-${month}-${day}`,
     };
 
-    addUser.mutate(formattedData);
-    setIsOpen(false);
+    mutation.mutate(formattedData);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className='gap-2'>
-          <PlusCircle size={20} /> Novo Usuário
-        </Button>
+        {isEditMode ? (
+          <Button className='gap-2 hover:bg-transparent ml-2' variant={'ghost'}>
+            <Pencil className='text-emerald-500' size={20} /> Editar
+          </Button>
+        ) : (
+          <Button className='gap-2'>
+            <PlusCircle size={20} /> Novo Usuário
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -278,7 +312,9 @@ export function UserRegisterModalForm() {
                   Cancel
                 </Button>
               </DialogClose>
-              <SubmitButton disableIfInvalid>Register</SubmitButton>
+              <SubmitButton disableIfInvalid>
+                {isEditMode ? 'Atualizar' : 'Cadastrar'}
+              </SubmitButton>
             </div>
           </form>
         </Form>

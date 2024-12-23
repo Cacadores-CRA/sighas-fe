@@ -9,17 +9,11 @@ export type TeacherEducationType =
   | 'DOCTORATE'
   | 'POST_DOCTORATE';
 
-export type TeacherStatusType =
-  | 'ACTIVE'
-  | 'CREATED'
-  | 'INACTIVE'
-  | 'SUSPENDED'
-  | 'FINISHED';
+export type TeacherStatusType = 'ACTIVE' | 'CREATED' | 'SUSPENDED' | 'FINISHED';
 
 export const teacherStatusLabel: Record<TeacherStatusType, string> = {
   ACTIVE: 'Ativo',
   CREATED: 'Criado',
-  INACTIVE: 'Inativo',
   SUSPENDED: 'Suspenso',
   FINISHED: 'Finalizado',
 };

@@ -8,10 +8,11 @@ export interface UserDataType {
   cpf: string;
   name: string;
   surname: string;
+  username: string;
   birthdate: string;
   education_level: string;
   email: string;
-  roles?: string[];
+  roles?: ('ADMIN' | 'USER')[];
   createdAt?: string;
 }
 

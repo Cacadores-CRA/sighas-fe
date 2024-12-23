@@ -38,7 +38,7 @@ export const userSchema = z.object({
   birthdate: z.string(),
   email: z.string().email({ message: 'O e-mail deve ser válido.' }),
   username: z
-    .string()
+    .string({ message: 'O nome de usuário é obrigatório.' })
     .min(3, {
       message: 'O nome de usuário deve conter no mínimo 3 caracteres.',
     })
