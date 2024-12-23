@@ -1,12 +1,31 @@
+import { useState } from 'react';
 import { UserDataType } from '@/services/users/useListUsers';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { format, parseISO } from 'date-fns';
 import { ChevronsUpDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import AffiliationsModal from '@/components/modals/AffiliationDetails';
 
 import { ActionsMenu } from './ActionsMenu';
+
+const AffiliationsCell = ({ row }: { row: Row<UserDataType> }) => {
+  const [openModalAffiliations, setOpenModalAffiliations] = useState(false);
+
+  console.log({ row });
+  console.log('abriuuu');
+
+  return (
+    <AffiliationsModal
+      open={openModalAffiliations}
+      onOpenChange={setOpenModalAffiliations}
+      userId={row.original.id}
+      userName={row.original.name}
+      affiliations={[]}
+    />
+  );
+};
 
 export const columns: ColumnDef<UserDataType>[] = [
   {
@@ -73,11 +92,9 @@ export const columns: ColumnDef<UserDataType>[] = [
     },
   },
   {
-    accessorKey: 'afilliations',
+    accessorKey: 'affiliations',
     header: 'Afiliações',
-    cell: ({ row }) => {
-      return <Button onClick={() => console.log(row)}>Afiliações</Button>;
-    },
+    cell: ({ row }) => <AffiliationsCell row={row} />,
   },
   {
     id: 'actions',
