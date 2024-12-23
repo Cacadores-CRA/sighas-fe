@@ -1,3 +1,4 @@
+import { studentStatusLabel, StudentStatusType } from '@/@types/students';
 import { useGetStudents } from '@/services/students/useGetStudents';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, Mail, User, UserCog } from 'lucide-react';
@@ -6,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import EditStudentModal from '@/components/modals/EditStudent';
 
 export const StudentPage = () => {
   const navigate = useNavigate();
@@ -28,13 +30,13 @@ export const StudentPage = () => {
       <div className='flex items-center justify-between'>
         <Button
           variant='ghost'
-          onClick={() => navigate({ to: '/teachers' })}
+          onClick={() => navigate({ to: '/students' })}
           className='hover:bg-secondary'
         >
           <ArrowLeft className='mr-2 h-4 w-4' />
           Voltar para lista
         </Button>
-        {/* <EditTeacherModal teacher={teacher} /> */}
+        <EditStudentModal student={student} />
       </div>
 
       <Card>
@@ -100,7 +102,6 @@ export const StudentPage = () => {
                   {student.education === 'DOCTORATE' && 'Doutorado'}
                 </Badge>
               </div> */}
-
               <div className='space-y-1'>
                 <div className='flex items-center space-x-2'>
                   <User className='h-4 w-4 text-muted-foreground' />
@@ -113,7 +114,7 @@ export const StudentPage = () => {
                     student.status === 'ACTIVE' ? 'default' : 'secondary'
                   }
                 >
-                  {student.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
+                  {studentStatusLabel[student.status as StudentStatusType]}
                 </Badge>
               </div>
             </div>
