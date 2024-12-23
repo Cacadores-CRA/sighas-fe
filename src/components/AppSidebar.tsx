@@ -4,8 +4,7 @@ import {
   GraduationCap,
   Home,
   LayoutDashboard,
-  Library,
-  Presentation,
+  Users,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -35,12 +34,12 @@ const items = [
   {
     title: 'Professores',
     url: '/teachers',
-    icon: Presentation,
+    icon: GraduationCap,
   },
   {
     title: 'Usuários',
     url: '/users',
-    icon: Presentation,
+    icon: Users,
   },
   {
     title: 'Disciplinas',
@@ -55,17 +54,17 @@ const items = [
   {
     title: 'Alunos',
     url: '/students',
-    icon: GraduationCap,
+    icon: Users,
   },
   {
     title: 'Cursos',
     url: '/courses',
-    icon: Library,
+    icon: GraduationCap,
   },
   {
     title: 'Turmas',
     url: '/classes',
-    icon: Library,
+    icon: Users,
   },
 ];
 
