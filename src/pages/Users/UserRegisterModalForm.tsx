@@ -215,9 +215,9 @@ export function UserRegisterModalForm() {
               render={() => (
                 <FormItem>
                   <div className='mb-4'>
-                    <FormLabel className='text-base'>Cargos</FormLabel>
+                    <FormLabel className='text-base'>Cargo</FormLabel>
                     <FormDescription>
-                      Selecione os cargos do usuário
+                      Selecione o cargo do usuário
                     </FormDescription>
                   </div>
                   <div className='space-y-2'>
@@ -233,15 +233,8 @@ export function UserRegisterModalForm() {
                                   checked={field.value?.includes('ADMIN')}
                                   onCheckedChange={(checked) => {
                                     return checked
-                                      ? field.onChange([
-                                          ...field.value,
-                                          'ADMIN',
-                                        ])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== 'ADMIN'
-                                          )
-                                        );
+                                      ? field.onChange(['ADMIN'])
+                                      : field.onChange([]);
                                   }}
                                 />
                               </FormControl>
@@ -255,12 +248,8 @@ export function UserRegisterModalForm() {
                                   checked={field.value?.includes('USER')}
                                   onCheckedChange={(checked) => {
                                     return checked
-                                      ? field.onChange([...field.value, 'USER'])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== 'USER'
-                                          )
-                                        );
+                                      ? field.onChange(['USER'])
+                                      : field.onChange([]);
                                   }}
                                 />
                               </FormControl>

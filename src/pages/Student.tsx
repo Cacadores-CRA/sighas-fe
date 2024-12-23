@@ -41,10 +41,10 @@ export const StudentPage = () => {
         <CardHeader className='flex flex-row items-center justify-between space-y-0'>
           <div>
             <CardTitle className='text-2xl font-bold'>
-              Detalhes do Professor
+              Detalhes do Aluno
             </CardTitle>
             <p className='text-sm text-muted-foreground'>
-              Informações completas do cadastro do professor
+              Informações completas do cadastro do aluno
             </p>
           </div>
         </CardHeader>
@@ -56,9 +56,9 @@ export const StudentPage = () => {
               </div>
               <div>
                 <h2 className='text-2xl font-bold'>{student.name}</h2>
-                <p className='text-muted-foreground'>
-                  Professor {student.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
-                </p>
+                {/* <p className='text-muted-foreground'>
+                  Aluno {student.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
+                </p> */}
               </div>
             </div>
 
@@ -69,7 +69,7 @@ export const StudentPage = () => {
                 <div className='flex items-center space-x-2'>
                   <Mail className='h-4 w-4 text-muted-foreground' />
                   <h3 className='text-sm font-medium text-muted-foreground'>
-                    Email Institucional
+                    Email
                   </h3>
                 </div>
                 <p className='text-lg font-medium'>

@@ -63,14 +63,14 @@ export function AddStudentModal({ open, onClose }: AddTeacherModalProps) {
       <DialogContent className='sm:max-w-[475px]'>
         <DialogHeader>
           <DialogTitle className='text-2xl font-bold'>
-            Adicionar Professor
+            Adicionar Aluno
           </DialogTitle>
         </DialogHeader>
 
         <div className='relative'>
           <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
           <Input
-            placeholder='Buscar usuário por nome, email ou CPF...'
+            placeholder='Buscar usuário por nome, email ou matrícula...'
             className='pl-8'
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}

@@ -57,13 +57,6 @@ export const columns: ColumnDef<UserDataType>[] = [
     cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
   },
   {
-    accessorKey: 'education_level',
-    header: 'Grau de Educação',
-    cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('education_level')}</div>
-    ),
-  },
-  {
     accessorKey: 'birthdate',
     header: 'Data de Nascimento',
     cell: ({ row }) => {
