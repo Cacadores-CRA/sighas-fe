@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { customInstance } from '../../api/axiosInstance';
+import { UserRegisterModalForm } from './UserRegisterModalForm';
 
 export function ActionsMenu({ user }: { user: UserDataType }) {
   const queryClient = useQueryClient();
@@ -58,8 +59,8 @@ export function ActionsMenu({ user }: { user: UserDataType }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem className='cursor-pointer' asChild>
           <Button
-            variant={'secondary'}
-            className='w-full'
+            variant={'ghost'}
+            className='w-full gap-2'
             onClick={() => {
               deleteUser.mutate(user.id);
             }}
@@ -67,6 +68,10 @@ export function ActionsMenu({ user }: { user: UserDataType }) {
             <Trash className='text-red-500' />
             Excluir
           </Button>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className='cursor-pointer' asChild>
+          <UserRegisterModalForm user={user} isEditMode={true} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
