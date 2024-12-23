@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStudentsList } from '@/services/students/useListStudents';
 import { Link, useSearch } from '@tanstack/react-router';
-import { Search, UserPlus } from 'lucide-react';
+import { Pencil, Search, UserPlus } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -65,9 +65,7 @@ export function StudentsPage() {
                 filteredStudents.map((student) => (
                   <TableRow key={student.userId}>
                     <TableCell className='font-medium'>
-                      <Link to={`/students/${student.enrollment}`}>
-                        {student.name}
-                      </Link>
+                      {student.name}
                     </TableCell>
                     <TableCell>{student.institutionalEmail}</TableCell>
                     <TableCell>{student.enrollment}</TableCell>
@@ -79,6 +77,14 @@ export function StudentsPage() {
                       >
                         {student.status}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/students/${student.enrollment}`}>
+                        <Button variant='outline'>
+                          <Pencil className='mr-2 h-4 w-4' />
+                          Editar
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))
