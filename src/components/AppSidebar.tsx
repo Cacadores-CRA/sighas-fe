@@ -62,13 +62,16 @@ const items = [
     url: '/courses',
     icon: Library,
   },
+  {
+    title: 'Turmas',
+    url: '/classes',
+    icon: Library,
+  },
 ];
 
 export function AppSidebar() {
   const location = useLocation();
   const pathname = location.pathname;
-
-  console.log({ pathname });
 
   return (
     <Sidebar>

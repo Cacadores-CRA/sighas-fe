@@ -19,6 +19,7 @@ import { Route as DashboardSubjectsImport } from './routes/_dashboard/subjects'
 import { Route as DashboardRoomsImport } from './routes/_dashboard/rooms'
 import { Route as DashboardHomeImport } from './routes/_dashboard/home'
 import { Route as DashboardCoursesImport } from './routes/_dashboard/courses'
+import { Route as DashboardClassesImport } from './routes/_dashboard/classes'
 import { Route as AuthRegisterImport } from './routes/_auth/register'
 import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as AuthForgetPasswordImport } from './routes/_auth/forget-password'
@@ -72,6 +73,12 @@ const DashboardHomeRoute = DashboardHomeImport.update({
 const DashboardCoursesRoute = DashboardCoursesImport.update({
   id: '/courses',
   path: '/courses',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardClassesRoute = DashboardClassesImport.update({
+  id: '/classes',
+  path: '/classes',
   getParentRoute: () => DashboardRoute,
 } as any)
 
@@ -163,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterImport
       parentRoute: typeof AuthImport
     }
+    '/_dashboard/classes': {
+      id: '/_dashboard/classes'
+      path: '/classes'
+      fullPath: '/classes'
+      preLoaderRoute: typeof DashboardClassesImport
+      parentRoute: typeof DashboardImport
+    }
     '/_dashboard/courses': {
       id: '/_dashboard/courses'
       path: '/courses'
@@ -246,6 +260,7 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardClassesRoute: typeof DashboardClassesRoute
   DashboardCoursesRoute: typeof DashboardCoursesRoute
   DashboardHomeRoute: typeof DashboardHomeRoute
   DashboardRoomsRoute: typeof DashboardRoomsRoute
@@ -258,6 +273,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardClassesRoute: DashboardClassesRoute,
   DashboardCoursesRoute: DashboardCoursesRoute,
   DashboardHomeRoute: DashboardHomeRoute,
   DashboardRoomsRoute: DashboardRoomsRoute,
@@ -279,6 +295,7 @@ export interface FileRoutesByFullPath {
   '/forget-password': typeof AuthForgetPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
+  '/classes': typeof DashboardClassesRoute
   '/courses': typeof DashboardCoursesRoute
   '/home': typeof DashboardHomeRoute
   '/rooms': typeof DashboardRoomsRoute
@@ -296,6 +313,7 @@ export interface FileRoutesByTo {
   '/forget-password': typeof AuthForgetPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
+  '/classes': typeof DashboardClassesRoute
   '/courses': typeof DashboardCoursesRoute
   '/home': typeof DashboardHomeRoute
   '/rooms': typeof DashboardRoomsRoute
@@ -315,6 +333,7 @@ export interface FileRoutesById {
   '/_auth/forget-password': typeof AuthForgetPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
+  '/_dashboard/classes': typeof DashboardClassesRoute
   '/_dashboard/courses': typeof DashboardCoursesRoute
   '/_dashboard/home': typeof DashboardHomeRoute
   '/_dashboard/rooms': typeof DashboardRoomsRoute
@@ -334,6 +353,7 @@ export interface FileRouteTypes {
     | '/forget-password'
     | '/login'
     | '/register'
+    | '/classes'
     | '/courses'
     | '/home'
     | '/rooms'
@@ -350,6 +370,7 @@ export interface FileRouteTypes {
     | '/forget-password'
     | '/login'
     | '/register'
+    | '/classes'
     | '/courses'
     | '/home'
     | '/rooms'
@@ -367,6 +388,7 @@ export interface FileRouteTypes {
     | '/_auth/forget-password'
     | '/_auth/login'
     | '/_auth/register'
+    | '/_dashboard/classes'
     | '/_dashboard/courses'
     | '/_dashboard/home'
     | '/_dashboard/rooms'
@@ -420,6 +442,7 @@ export const routeTree = rootRoute
     "/_dashboard": {
       "filePath": "_dashboard.tsx",
       "children": [
+        "/_dashboard/classes",
         "/_dashboard/courses",
         "/_dashboard/home",
         "/_dashboard/rooms",
@@ -442,6 +465,10 @@ export const routeTree = rootRoute
     "/_auth/register": {
       "filePath": "_auth/register.tsx",
       "parent": "/_auth"
+    },
+    "/_dashboard/classes": {
+      "filePath": "_dashboard/classes.tsx",
+      "parent": "/_dashboard"
     },
     "/_dashboard/courses": {
       "filePath": "_dashboard/courses.tsx",
