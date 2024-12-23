@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCreateStudent } from '@/services/students/useCreateStudent';
-import { useStudentsList } from '@/services/students/useListStudents';
+import { useListStudents } from '@/services/students/useListStudents';
 import { UserDataType, useUsersList } from '@/services/users/useListUsers';
 import { Search, UserPlus } from 'lucide-react';
 
@@ -25,7 +25,7 @@ export function AddStudentModal({ open, onClose }: AddTeacherModalProps) {
   const [loading, setLoading] = useState(false);
 
   const { data: users } = useUsersList();
-  const { data: students } = useStudentsList();
+  const { data: students } = useListStudents();
   const { mutateAsync } = useCreateStudent();
 
   const availableUsers = users?.filter(

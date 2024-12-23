@@ -1,6 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useGetClasse } from '@/services/classes/useGetClasse';
+import { useRemoveStudentToClass } from '@/services/classes/useRemoveStudentToClass';
+import { useRemoveTeacherToClass } from '@/services/classes/useRemoveTeacherToClass';
 import { useParams } from '@tanstack/react-router';
 import {
   Calendar,
@@ -33,14 +36,18 @@ import {
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AddStudentToClassModal } from '@/components/modals/AddStudentToClass';
+import { AddTeacherToClassModal } from '@/components/modals/AddTeacherToClass';
 
 export const ClassePage = () => {
   const { id } = useParams({ strict: false });
   const { data: classDetails } = useGetClasse(id as string);
 
-  //   const [activeTab, setActiveTab] = useState('info');
+  const { mutate: removeTeacherToClass } = useRemoveTeacherToClass();
+  const { mutate: removeStudentToClass } = useRemoveStudentToClass();
 
-  // Mock data - replace with actual data fetching
+  const [isAddTeacherModalOpen, setIsAddTeacherModalOpen] = useState(false);
+  const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
 
   return (
     <div className='container mx-auto py-8'>
@@ -283,46 +290,62 @@ export const ClassePage = () => {
                   className='pl-10 border-2 focus:border-[#172554] transition-colors'
                 />
               </div>
-              <Button className='bg-[#172554] hover:bg-[#1e3a8a] text-white shadow-md transition-all hover:shadow-lg'>
+              <Button
+                className='bg-[#172554] hover:bg-[#1e3a8a] text-white shadow-md transition-all hover:shadow-lg'
+                onClick={() => setIsAddTeacherModalOpen(true)}
+              >
                 <Plus className='w-4 h-4 mr-2' />
                 Adicionar Professor
               </Button>
             </div>
 
-            <div className='grid gap-4'>
-              {classDetails?.professors.map((professor) => (
-                <Card
-                  key={professor.siape}
-                  className='p-6 hover:shadow-lg transition-all border-none bg-gradient-to-br from-white to-[#f1f5f9]'
-                >
-                  <div className='flex items-center gap-4'>
-                    <Avatar className='h-16 w-16 ring-2 ring-[#172554]/20 ring-offset-2'>
-                      {/* <AvatarImage src={professor.avatar} /> */}
-                      <AvatarFallback className='bg-gradient-to-br from-[#172554] to-[#1e40af] text-white'>
-                        <UserCircle className='w-8 h-8' />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className='flex-1'>
-                      <h3 className='font-semibold text-lg text-gray-800'>
-                        {professor.name}
-                      </h3>
-                      <div className='flex items-center gap-4 text-sm text-gray-600 mt-1'>
-                        <div className='flex items-center gap-2 bg-[#172554]/5 px-3 py-1 rounded-full'>
-                          <Mail className='w-4 h-4 text-[#172554]' />
-                          {professor.institutionalEmail}
+            {!classDetails?.professors ||
+            classDetails.professors.length === 0 ? (
+              <div className='text-center py-8 text-muted-foreground'>
+                Não há professores cadastrados nesta turma
+              </div>
+            ) : (
+              <div className='grid gap-4'>
+                {classDetails?.professors.map((professor) => (
+                  <Card
+                    key={professor.siape}
+                    className='p-6 hover:shadow-lg transition-all border-none bg-gradient-to-br from-white to-[#f1f5f9]'
+                  >
+                    <div className='flex items-center gap-4'>
+                      <Avatar className='h-16 w-16 ring-2 ring-[#172554]/20 ring-offset-2'>
+                        {/* <AvatarImage src={professor.avatar} /> */}
+                        <AvatarFallback className='bg-gradient-to-br from-[#172554] to-[#1e40af] text-white'>
+                          <UserCircle className='w-8 h-8' />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className='flex-1'>
+                        <h3 className='font-semibold text-lg text-gray-800'>
+                          {professor.name}
+                        </h3>
+                        <div className='flex items-center gap-4 text-sm text-gray-600 mt-1'>
+                          <div className='flex items-center gap-2 bg-[#172554]/5 px-3 py-1 rounded-full'>
+                            <Mail className='w-4 h-4 text-[#172554]' />
+                            {professor.institutionalEmail}
+                          </div>
                         </div>
                       </div>
+                      <Button
+                        variant='outline'
+                        className='border-2 border-red-200 text-red-600 hover:bg-red-50 transition-colors'
+                        onClick={() => {
+                          removeTeacherToClass({
+                            classId: id as string,
+                            siape: professor.siape,
+                          });
+                        }}
+                      >
+                        Remover
+                      </Button>
                     </div>
-                    <Button
-                      variant='outline'
-                      className='border-2 border-red-200 text-red-600 hover:bg-red-50 transition-colors'
-                    >
-                      Remover
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-            </div>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </TabsContent>
 
@@ -336,50 +359,76 @@ export const ClassePage = () => {
                   className='pl-10 border-2 focus:border-[#172554] transition-colors'
                 />
               </div>
-              <Button className='bg-[#172554] hover:bg-[#1e3a8a] text-white shadow-md transition-all hover:shadow-lg'>
+              <Button
+                onClick={() => setIsAddStudentModalOpen(true)}
+                className='bg-[#172554] hover:bg-[#1e3a8a] text-white shadow-md transition-all hover:shadow-lg'
+              >
                 <Plus className='w-4 h-4 mr-2' />
                 Adicionar Alunos
               </Button>
             </div>
 
-            <div className='grid gap-4'>
-              {classDetails?.students.map((student) => (
-                <Card
-                  key={student.enrollment}
-                  className='p-6 hover:shadow-lg transition-all border-none bg-gradient-to-br from-white to-[#f1f5f9]'
-                >
-                  <div className='flex items-center gap-4'>
-                    <Avatar className='h-16 w-16 ring-2 ring-[#172554]/20 ring-offset-2'>
-                      {/* <AvatarImage src={student.avatar} /> */}
-                      <AvatarFallback className='bg-gradient-to-br from-[#172554] to-[#1e40af] text-white'>
-                        <UserCircle className='w-8 h-8' />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className='flex-1'>
-                      <h3 className='font-semibold text-lg text-gray-800'>
-                        {student.name}
-                      </h3>
-                      <div className='flex items-center gap-4 text-sm text-gray-600 mt-1'>
-                        <div className='flex items-center gap-2 bg-[#172554]/5 px-3 py-1 rounded-full'>
-                          <span className='text-[#172554]'>
-                            Matrícula: {student.enrollment}
-                          </span>
+            {!classDetails?.students || classDetails.students.length === 0 ? (
+              <div className='text-center py-8 text-muted-foreground'>
+                Não há alunos cadastrados nesta turma
+              </div>
+            ) : (
+              <div className='grid gap-4'>
+                {classDetails?.students.map((student) => (
+                  <Card
+                    key={student.enrollment}
+                    className='p-6 hover:shadow-lg transition-all border-none bg-gradient-to-br from-white to-[#f1f5f9]'
+                  >
+                    <div className='flex items-center gap-4'>
+                      <Avatar className='h-16 w-16 ring-2 ring-[#172554]/20 ring-offset-2'>
+                        {/* <AvatarImage src={student.avatar} /> */}
+                        <AvatarFallback className='bg-gradient-to-br from-[#172554] to-[#1e40af] text-white'>
+                          <UserCircle className='w-8 h-8' />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className='flex-1'>
+                        <h3 className='font-semibold text-lg text-gray-800'>
+                          {student.name}
+                        </h3>
+                        <div className='flex items-center gap-4 text-sm text-gray-600 mt-1'>
+                          <div className='flex items-center gap-2 bg-[#172554]/5 px-3 py-1 rounded-full'>
+                            <span className='text-[#172554]'>
+                              Matrícula: {student.enrollment}
+                            </span>
+                          </div>
                         </div>
                       </div>
+                      <Button
+                        variant='outline'
+                        className='border-2 border-red-200 text-red-600 hover:bg-red-50 transition-colors'
+                        onClick={() => {
+                          removeStudentToClass({
+                            classId: id as string,
+                            enrollment: student.enrollment,
+                          });
+                        }}
+                      >
+                        Remover
+                      </Button>
                     </div>
-                    <Button
-                      variant='outline'
-                      className='border-2 border-red-200 text-red-600 hover:bg-red-50 transition-colors'
-                    >
-                      Remover
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-            </div>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </TabsContent>
       </Tabs>
+
+      <AddTeacherToClassModal
+        open={isAddTeacherModalOpen}
+        onClose={() => setIsAddTeacherModalOpen(false)}
+        classId={id as string}
+      />
+      <AddStudentToClassModal
+        open={isAddStudentModalOpen}
+        onClose={() => setIsAddStudentModalOpen(false)}
+        classId={id as string}
+      />
     </div>
   );
 };

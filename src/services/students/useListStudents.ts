@@ -24,7 +24,7 @@ function studentsList(/*params: UsersListParams*/) {
   return students;
 }
 
-export const useStudentsList = (
+export const useListStudents = (
   /*params: UsersListParams,*/
   queryKeys?: string[]
 ) =>
