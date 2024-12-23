@@ -1,7 +1,13 @@
 import { useState } from 'react';
+import {
+  teacherEducationLabel,
+  TeacherEducationType,
+  teacherStatusLabel,
+  TeacherStatusType,
+} from '@/@types/teachers';
 import { useTeachersList } from '@/services/teachers/useListTearchers';
 import { Link } from '@tanstack/react-router';
-import { Search, UserPlus } from 'lucide-react';
+import { Pencil, Search, UserPlus } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -60,6 +66,7 @@ export function TeachersPage() {
                 <TableHead>SIAPE</TableHead>
                 <TableHead>Grau de Educação</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -67,21 +74,37 @@ export function TeachersPage() {
                 filteredTeachers.map((teacher) => (
                   <TableRow key={teacher.userId}>
                     <TableCell className='font-medium'>
-                      <Link to={`/teachers/${teacher.siape}`}>
-                        {teacher.name}
-                      </Link>
+                      {teacher.name}
                     </TableCell>
                     <TableCell>{teacher.institutionalEmail}</TableCell>
                     <TableCell>{teacher.siape}</TableCell>
-                    <TableCell>{teacher.education}</TableCell>
+                    <TableCell>
+                      {
+                        teacherEducationLabel[
+                          teacher.education as TeacherEducationType
+                        ]
+                      }
+                    </TableCell>
                     <TableCell>
                       <Badge
                         variant={
                           teacher.status === 'ACTIVE' ? 'default' : 'secondary'
                         }
                       >
-                        {teacher.status}
+                        {
+                          teacherStatusLabel[
+                            teacher.status as TeacherStatusType
+                          ]
+                        }
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/teachers/${teacher.siape}`}>
+                        <Button variant='outline'>
+                          <Pencil className='mr-2 h-4 w-4' />
+                          Editar
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))

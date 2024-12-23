@@ -1,3 +1,9 @@
+import {
+  teacherEducationLabel,
+  TeacherEducationType,
+  teacherStatusLabel,
+  TeacherStatusType,
+} from '@/@types/teachers';
 import { useGetTeacher } from '@/services/teachers/useGetTeacher';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, GraduationCap, Mail, User, UserCog } from 'lucide-react';
@@ -20,6 +26,9 @@ export const TeacherPage = () => {
   if (!teacher) {
     return <div>Teacher not found</div>;
   }
+
+  const teacherEducation =
+    teacherEducationLabel[teacher.education as TeacherEducationType];
 
   return (
     <div className='container mx-auto py-10 max-w-4xl space-y-6'>
@@ -54,9 +63,10 @@ export const TeacherPage = () => {
               </div>
               <div>
                 <h2 className='text-2xl font-bold'>{teacher.name}</h2>
-                <p className='text-muted-foreground'>
-                  Professor {teacher.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
-                </p>
+                {/* <p className='text-muted-foreground'>
+                  Professor{' '}
+                  {teacherStatusLabel[teacher.status as TeacherStatusType]}
+                </p> */}
               </div>
             </div>
 
@@ -93,9 +103,7 @@ export const TeacherPage = () => {
                   </h3>
                 </div>
                 <Badge variant='outline' className='text-base'>
-                  {teacher.education === 'GRADUATE' && 'Graduação'}
-                  {teacher.education === 'MASTER' && 'Mestrado'}
-                  {teacher.education === 'DOCTORATE' && 'Doutorado'}
+                  {teacherEducation}
                 </Badge>
               </div>
 
@@ -111,7 +119,7 @@ export const TeacherPage = () => {
                     teacher.status === 'ACTIVE' ? 'default' : 'secondary'
                   }
                 >
-                  {teacher.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
+                  {teacherStatusLabel[teacher.status as TeacherStatusType]}
                 </Badge>
               </div>
             </div>

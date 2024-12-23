@@ -9,6 +9,7 @@ interface TeacherPayload {
   siape: string;
   education: string;
   institutionalEmail: string;
+  affiliationId: string;
 }
 
 interface TeacherResponse {
@@ -37,7 +38,7 @@ export const useUpdateTeacher = () => {
   return useMutation({
     mutationFn: async (data: TeacherPayload) => {
       const response = await customInstance<TeacherResponse>({
-        url: `/professors/${data.userId}`,
+        url: `/professors/${data.affiliationId}`,
         method: 'PUT',
         data,
       });

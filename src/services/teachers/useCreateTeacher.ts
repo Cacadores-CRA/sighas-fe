@@ -11,6 +11,10 @@ export interface TeacherPayload {
   institutionalEmail: string;
 }
 
+export interface EditTeacherPayload extends TeacherPayload {
+  affiliationId: string;
+}
+
 export interface TeacherResponse {
   userId: string;
   siape: string;

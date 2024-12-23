@@ -1,7 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { TeacherPayload } from '@/services/teachers/useCreateTeacher';
+import {
+  teacherEducationLabel,
+  TeacherEducationType,
+  teacherStatusLabel,
+  TeacherStatusType,
+} from '@/@types/teachers';
+import { useListAffiliations } from '@/services/affilitiaons/useAffiliations';
+import { EditTeacherPayload } from '@/services/teachers/useCreateTeacher';
 import { TeacherDataType } from '@/services/teachers/useListTearchers';
 import { useUpdateTeacher } from '@/services/teachers/useUpdateTeacher';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,7 +56,7 @@ const formSchema = z.object({
     'DOCTORATE',
     'POST_DOCTORATE',
   ]),
-  status: z.enum(['CREATED', 'ACTIVE', 'SUSPENDED', 'FINISHED']),
+  status: z.enum(['CREATED', 'ACTIVE', 'INACTIVE', 'SUSPENDED', 'FINISHED']),
 });
 
 export default function EditTeacherModal({
@@ -59,6 +66,11 @@ export default function EditTeacherModal({
 }) {
   const [open, setOpen] = useState(false);
   const { mutateAsync } = useUpdateTeacher();
+  const { data: affiliations } = useListAffiliations();
+
+  const affiliationTeacher = affiliations?.find(
+    (affiliation) => affiliation.userId === teacher.userId
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,17 +85,30 @@ export default function EditTeacherModal({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const payload: TeacherPayload = {
+      const isChangedSiape = values.siape !== teacher.siape;
+
+      const payload: EditTeacherPayload = {
         userId: teacher.userId,
         startingDate: teacher.createdAt || new Date().toISOString(),
         endingDate: new Date().toISOString(),
-        status: 'CREATED',
+        status: values.status as TeacherStatusType,
         siape: values.siape,
-        education: values.education,
+        education: values.education as TeacherEducationType,
         institutionalEmail: values.email,
+        name: values.name,
+        affiliationId: affiliationTeacher?.id || '',
       };
 
       await mutateAsync(payload);
+
+      if (isChangedSiape) {
+        window.history.replaceState(
+          null,
+          '',
+          window.location.pathname.replace(teacher.siape, values.siape)
+        );
+      }
+
       setOpen(false);
       toast.success('Professor atualizado com sucesso');
     } catch (error) {
@@ -157,23 +182,13 @@ export default function EditTeacherModal({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value='HIGH_SCHOOL'>Ensino Médio</SelectItem>
-                      <SelectItem value='TECHNICAL_CERTIFICATION'>
-                        Certificação Técnica
-                      </SelectItem>
-                      <SelectItem value='ASSOCIATE'>Associado</SelectItem>
-                      <SelectItem value='BACHELOR_EDUCATION'>
-                        Bacharelado em Educação
-                      </SelectItem>
-                      <SelectItem value='BACHELOR'>Bacharel</SelectItem>
-                      <SelectItem value='POSTGRADUATE'>
-                        Pós-Graduação
-                      </SelectItem>
-                      <SelectItem value='MASTER'>Mestrado</SelectItem>
-                      <SelectItem value='DOCTORATE'>Doutorado</SelectItem>
-                      <SelectItem value='POST_DOCTORATE'>
-                        Pós-Doutorado
-                      </SelectItem>
+                      {Object.entries(teacherEducationLabel).map(
+                        ([value, label]) => (
+                          <SelectItem key={value} value={value}>
+                            {label as string}
+                          </SelectItem>
+                        )
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -196,8 +211,13 @@ export default function EditTeacherModal({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value='ACTIVE'>Ativo</SelectItem>
-                      <SelectItem value='CREATED'>Criado</SelectItem>
+                      {Object.entries(teacherStatusLabel).map(
+                        ([value, label]) => (
+                          <SelectItem key={value} value={value}>
+                            {label as string}
+                          </SelectItem>
+                        )
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />

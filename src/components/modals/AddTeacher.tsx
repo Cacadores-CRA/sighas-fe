@@ -90,7 +90,7 @@ export function AddTeacherModal({ open, onClose }: AddTeacherModalProps) {
         <div className='relative'>
           <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
           <Input
-            placeholder='Buscar usuário por nome, email ou CPF...'
+            placeholder='Buscar usuário por nome, email ou SIAPE...'
             className='pl-8'
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
