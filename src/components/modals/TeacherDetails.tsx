@@ -101,7 +101,12 @@ export function TeacherDetailsModal({
             <Button variant='outline' onClick={onClose}>
               Cancelar
             </Button>
-            <Button onClick={handleSubmit}>Confirmar</Button>
+            <Button
+              disabled={!siape || !education || !!siapeError}
+              onClick={handleSubmit}
+            >
+              Confirmar
+            </Button>
           </div>
         </div>
       </DialogContent>

@@ -15,6 +15,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
+import { StudentDetailsModal } from './StudentDetails';
+
 interface AddTeacherModalProps {
   open: boolean;
   onClose: () => void;
@@ -27,6 +29,9 @@ export function AddStudentModal({ open, onClose }: AddTeacherModalProps) {
   const { data: users } = useUsersList();
   const { data: students } = useListStudents();
   const { mutateAsync } = useCreateStudent();
+
+  const [showDetails, setShowDetails] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserDataType | null>(null);
 
   const availableUsers = users?.filter(
     (user) => !students?.some((student) => student.userId === user.id)
@@ -45,17 +50,31 @@ export function AddStudentModal({ open, onClose }: AddTeacherModalProps) {
     setTimeout(() => setLoading(false), 500);
   };
 
-  const assignStudentRole = async (user: UserDataType) => {
+  const handleUserSelect = (user: UserDataType) => {
+    setSelectedUser(user);
+    setShowDetails(true);
+  };
+
+  const assignStudentRole = async (enrollment: string) => {
+    if (!selectedUser) return;
+
     await mutateAsync({
-      userId: user.id,
+      userId: selectedUser.id,
       startingDate: new Date().toISOString(),
       endingDate: new Date().toISOString(),
       status: 'CREATED',
-      institutionalEmail: user.email,
-      enrollment: '1234567890',
+      institutionalEmail: selectedUser.email,
+      enrollment: enrollment,
     });
 
+    setShowDetails(false);
+    setSelectedUser(null);
     onClose();
+  };
+
+  const handleDetailsClose = () => {
+    setShowDetails(false);
+    setSelectedUser(null);
   };
 
   return (
@@ -109,7 +128,7 @@ export function AddStudentModal({ open, onClose }: AddTeacherModalProps) {
                       </p>
                     </div>
                   </div>
-                  <Button size='sm' onClick={() => assignStudentRole(user)}>
+                  <Button size='sm' onClick={() => handleUserSelect(user)}>
                     <UserPlus className='mr-2 h-4 w-4' />
                     Adicionar
                   </Button>
@@ -123,6 +142,14 @@ export function AddStudentModal({ open, onClose }: AddTeacherModalProps) {
             </div>
           )}
         </ScrollArea>
+        {selectedUser && (
+          <StudentDetailsModal
+            open={showDetails}
+            onClose={handleDetailsClose}
+            onConfirm={assignStudentRole}
+            user={selectedUser}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

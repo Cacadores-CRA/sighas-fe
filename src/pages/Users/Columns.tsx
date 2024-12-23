@@ -1,55 +1,36 @@
-import { useState } from 'react';
 import { UserDataType } from '@/services/users/useListUsers';
-import { ColumnDef, Row } from '@tanstack/react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import { format, parseISO } from 'date-fns';
 import { ChevronsUpDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import AffiliationsModal from '@/components/modals/AffiliationDetails';
 
 import { ActionsMenu } from './ActionsMenu';
-
-const AffiliationsCell = ({ row }: { row: Row<UserDataType> }) => {
-  const [openModalAffiliations, setOpenModalAffiliations] = useState(false);
-
-  console.log({ row });
-  console.log('abriuuu');
-
-  return (
-    <AffiliationsModal
-      open={openModalAffiliations}
-      onOpenChange={setOpenModalAffiliations}
-      userId={row.original.id}
-      userName={row.original.name}
-      affiliations={[]}
-    />
-  );
-};
+import { AffiliationsCell } from './AffiliationsCell';
 
 export const columns: ColumnDef<UserDataType>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  // {
+  //   id: 'select',
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label='Select all'
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label='Select row'
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
     accessorKey: 'name',
     header: 'Nome',
