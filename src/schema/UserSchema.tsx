@@ -29,11 +29,11 @@ export const userSchema = z.object({
     }),
   name: z
     .string()
-    .min(2, { message: 'O nome deve conter no mínimo 2 caracteres.' })
+    .min(6, { message: 'O nome deve conter no mínimo 6 caracteres.' })
     .max(50, { message: 'O nome deve conter no máximo 50 caracteres.' }),
   surname: z
     .string()
-    .min(2, { message: 'O sobrenome deve conter no mínimo 2 caracteres.' })
+    .min(6, { message: 'O sobrenome deve conter no mínimo 6 caracteres.' })
     .max(50, { message: 'O sobrenome deve conter no máximo 50 caracteres.' }),
   birthdate: z.string(),
   email: z.string().email({ message: 'O e-mail deve ser válido.' }),
