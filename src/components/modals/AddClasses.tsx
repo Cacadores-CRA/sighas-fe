@@ -62,11 +62,15 @@ const generateYearOptions = (startYear = getCurrentYear()) => {
   return years;
 };
 
-export function AddClassesModal() {
+interface AddClassesModalProps {
+  isOpen?: boolean;
+}
+
+export function AddClassesModal({ isOpen }: AddClassesModalProps) {
   const { data: subjects } = useListSubjects();
   const { mutateAsync } = useCreateClasses();
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(isOpen || false);
   const form = useForm<CreateClassFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -142,7 +146,7 @@ export function AddClassesModal() {
                           </SelectItem>
                         ))
                       ) : (
-                        <SelectItem value='' disabled>
+                        <SelectItem value='placeholder' disabled>
                           Carregando disciplinas...
                         </SelectItem>
                       )}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useClassesList } from '@/services/classes/useListClasses';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import {
   BookOpen,
   Calendar,
@@ -76,6 +76,9 @@ export const ClassesPage = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const searchParams: { modal: boolean } = useSearch({ strict: false });
+
+  console.log({ searchParams });
 
   const { data: classes } = useClassesList();
 
@@ -152,7 +155,7 @@ export const ClassesPage = () => {
       <div className='flex flex-col gap-6'>
         <div className='flex items-center justify-between'>
           <h2 className='text-xl font-semibold'>Todas as turmas</h2>
-          <AddClassesModal />
+          <AddClassesModal isOpen={searchParams.modal} />
         </div>
 
         <div className='flex flex-col md:flex-row gap-4 items-start md:items-center justify-between'>

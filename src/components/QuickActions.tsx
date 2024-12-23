@@ -12,10 +12,12 @@ export function QuickActions() {
           <CardTitle>Ações Rápidas</CardTitle>
         </CardHeader>
         <CardContent className='grid gap-4'>
-          <Button className='w-full justify-start' variant='default'>
-            <PlusCircle className='mr-2 h-4 w-4' />
-            Nova Turma
-          </Button>
+          <Link href='/classes?modal=true'>
+            <Button className='w-full justify-start' variant='default'>
+              <PlusCircle className='mr-2 h-4 w-4' />
+              Nova Turma
+            </Button>
+          </Link>
           <Link href='/students?modal=true'>
             <Button className='w-full justify-start' variant='secondary'>
               <UserPlus className='mr-2 h-4 w-4' />
