@@ -31,3 +31,11 @@ export interface StudentResponse {
   institutionalEmail: string;
   createdAt: string;
 }
+
+export type GroupPayload = {
+  code: string;
+  subjectId: string;
+  year: number;
+  semester: 'FIRST_SEMESTER' | 'SECOND_SEMESTER';
+  status: 'OPEN' | 'ACTIVE' | 'CLOSED';
+};

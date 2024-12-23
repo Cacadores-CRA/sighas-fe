@@ -12,7 +12,7 @@ function classesList() {
 
 export const useClassesList = (queryKeys?: string[]) =>
   useQuery({
-    queryKey: ['classes', ...(queryKeys || [])],
+    queryKey: ['groups', ...(queryKeys || [])],
     refetchIntervalInBackground: true,
     placeholderData: keepPreviousData,
     queryFn: () => classesList(),

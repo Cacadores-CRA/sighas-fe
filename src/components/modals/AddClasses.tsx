@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { GroupPayload } from '@/@types/groups';
+import { useCreateClasses } from '@/services/classes/useCreateClasses';
+import { useListSubjects } from '@/services/subjects/useListSubjtects';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -32,31 +35,60 @@ import {
 
 const formSchema = z.object({
   code: z.string().min(3, 'Código deve ter no mínimo 3 caracteres'),
-  subjectId: z.string().min(1, 'Selecione uma disciplina'),
-  academicPeriod: z.string().min(1, 'Selecione um período'),
+  subjectId: z.string().uuid('ID da disciplina inválido'),
+  year: z.number().min(2024, 'Ano deve ser maior ou igual a 2024'),
+  semester: z.enum(['FIRST_SEMESTER', 'SECOND_SEMESTER'], {
+    required_error: 'Selecione um semestre',
+  }),
+  status: z.enum(['OPEN', 'ACTIVE', 'CLOSED']).default('OPEN'),
 });
 
 type CreateClassFormData = z.infer<typeof formSchema>;
+
+const getCurrentYear = () => new Date().getFullYear();
+
+const generateYearOptions = (startYear = getCurrentYear()) => {
+  const years = [];
+  for (let i = 0; i < 2; i++) {
+    const year = startYear + i;
+    years.push({
+      year,
+      semesters: [
+        { value: `${year}`, label: `${year}.1`, period: 'FIRST_SEMESTER' },
+        { value: `${year}`, label: `${year}.2`, period: 'SECOND_SEMESTER' },
+      ],
+    });
+  }
+  return years;
+};
+
 export function AddClassesModal() {
+  const { data: subjects } = useListSubjects();
+  const { mutateAsync } = useCreateClasses();
+
   const [open, setOpen] = useState(false);
   const form = useForm<CreateClassFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       code: '',
       subjectId: '',
-      academicPeriod: '',
+      year: 2024,
+      semester: 'FIRST_SEMESTER',
+      status: 'OPEN',
     },
   });
-  const onSubmit = async (data: CreateClassFormData) => {
+  const onSubmit = async (data: GroupPayload) => {
     try {
-      // TODO: Implement class creation
-      console.log(data);
+      await mutateAsync(data);
       setOpen(false);
       form.reset();
     } catch (error) {
       console.error(error);
     }
   };
+
+  const yearOptions = generateYearOptions();
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -103,13 +135,17 @@ export function AddClassesModal() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value='1'>
-                        Programação Orientada a Objetos
-                      </SelectItem>
-                      <SelectItem value='2'>Cálculo Quântico II</SelectItem>
-                      <SelectItem value='3'>
-                        Introdução à Metodologia de Pesquisa
-                      </SelectItem>
+                      {Array.isArray(subjects) && subjects.length > 0 ? (
+                        subjects.map((subject) => (
+                          <SelectItem key={subject.id} value={subject.id}>
+                            {subject.title}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value='' disabled>
+                          Carregando disciplinas...
+                        </SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -118,13 +154,24 @@ export function AddClassesModal() {
             />
             <FormField
               control={form.control}
-              name='academicPeriod'
+              name='year'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Período Acadêmico</FormLabel>
+                  <FormLabel>Ano/Semestre</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(value) => {
+                      const [year, period] = value.split('-');
+                      form.setValue('year', parseInt(year));
+                      form.setValue(
+                        'semester',
+                        period as 'FIRST_SEMESTER' | 'SECOND_SEMESTER'
+                      );
+                    }}
+                    defaultValue={
+                      field.value
+                        ? `${field.value}-${form.getValues('semester')}`
+                        : undefined
+                    }
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -132,8 +179,16 @@ export function AddClassesModal() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value='2024.1'>2024.1</SelectItem>
-                      <SelectItem value='2024.2'>2024.2</SelectItem>
+                      {yearOptions.map((yearOption) =>
+                        yearOption.semesters.map((semester) => (
+                          <SelectItem
+                            key={`${yearOption.year}-${semester.period}`}
+                            value={`${yearOption.year}-${semester.period}`}
+                          >
+                            {semester.label}
+                          </SelectItem>
+                        ))
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
