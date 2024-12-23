@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useStudentsList } from '@/services/students/useListStudents';
+import { useListStudents } from '@/services/students/useListStudents';
 import { Link, useSearch } from '@tanstack/react-router';
 import { Pencil, Search, UserPlus } from 'lucide-react';
 
@@ -19,7 +19,7 @@ import { AddStudentModal } from '@/components/modals/AddStudents';
 
 export function StudentsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: students } = useStudentsList();
+  const { data: students } = useListStudents();
   const searchParams: { modal: boolean } = useSearch({ strict: false });
   const [isModalOpen, setIsModalOpen] = useState(searchParams.modal ?? false);
 
